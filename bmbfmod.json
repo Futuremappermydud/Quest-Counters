@@ -1,0 +1,33 @@
+{
+    "id": "QuestCounters",
+    "name": "Quest Counters",
+    "author": "Futuremappermydud",
+    "description": [
+        
+    ],
+    "category": "Gameplay",
+    "gameVersion": "1.11.1",
+    "version": "1.2.5",
+    "platform": "Quest",
+    "components": [
+        {
+            "type": "HookMod",
+            "installAction": {
+                "installLibraryFile": "libquestcounters.so"
+            },
+            "uninstallAction": {
+                "removeLibraryFile": "libquestcounters.so"
+            }
+        },
+	{
+            "type": "FileCopyMod",
+            "sourceFileName": "libbeatsaber-hook_0_4_8.so",
+            "targetRootedPathAndFileName": "/sdcard/Android/data/com.beatgames.beatsaber/files/libs/libbeatsaber-hook_0_4_8.so"
+        },
+	{
+            "type": "FileCopyMod",
+            "sourceFileName": "libcustomui-Idfkwhatversion.so",
+            "targetRootedPathAndFileName": "/sdcard/Android/data/com.beatgames.beatsaber/files/libs/libcustomui-Idfkwhatversion.so"
+        }
+    ]
+}
