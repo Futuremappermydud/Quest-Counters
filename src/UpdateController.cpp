@@ -8,9 +8,6 @@ Il2CppObject* DownloadHandler = nullptr;
 Il2CppObject* WebRequestAsyncOp = nullptr;
 Il2CppString* JsonStr = nullptr; 
 
-std::string Ver = modInfo.version + "STABLE";
-std::string LATESTVer = "LOADING";
-
 CustomUI::TextObject VersionText;
 
 std::string text = "<size=6><mspace=3.5><align=\"center\">NO INTERNET</align></mspace></size><br><color=#88202088>Error</color>";
@@ -56,7 +53,7 @@ void Update_Start(Il2CppObject* self)
     VersionText.sizeDelta = {0, -60 };
     VersionText.parentTransform = CampaignBTransform;
     //Set Text
-    VersionText.text = "<color=#FFD700>Quest Counters</color>\nYour Version: " + std::string(modInfo.version) + "\nRecent Version: " + text;
+    VersionText.text = "<color=#FFD700>Quest Counters</color>\nYour Version: " + std::string(version) + "\nRecent Version: " + text;
     //Create
     CRASH_UNLESS(VersionText.create());
 }

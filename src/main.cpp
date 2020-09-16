@@ -24,6 +24,8 @@ bool NoHud = false;
 
 int Notes;
 
+std::string version;
+
 MAKE_HOOK_OFFSETLESS(UIStart, void, Il2CppObject* self) {
     UIStart(self);
     if(NoHud) return;
@@ -212,6 +214,8 @@ extern "C" void setup(ModInfo& info) {
     modInfo = info;
     
     getConfig().Load();
+
+    version = info.version;
 }
 
 extern "C" void load() {
@@ -233,5 +237,4 @@ extern "C" void load() {
     INSTALL_HOOK_OFFSETLESS(SpawnObstacle, FindMethodUnsafe("", "BeatmapObjectSpawnController", "SpawnObstacle", 1));
     INSTALL_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, FindMethodUnsafe("", "RelativeScoreAndImmediateRankCounter", "UpdateRelativeScoreAndImmediateRank", 4));
     INSTALL_HOOK_OFFSETLESS(StartConfigUI, FindMethodUnsafe("", "PauseMenuManager", "Start", 0));
-
 }

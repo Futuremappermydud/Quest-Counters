@@ -111,6 +111,7 @@ extern int Notes;
 extern int WallsCount;
 extern int oneSaberType;
 extern bool oneSaber;
+extern std::string version;
 
 
 //UI

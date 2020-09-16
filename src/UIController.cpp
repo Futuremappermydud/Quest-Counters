@@ -1,6 +1,5 @@
 #include "../include/Main.hpp"
 
-<<<<<<< HEAD
 Color DefaultColor;
 Color Changes = {0, 255, 0, 1};
 
@@ -11,15 +10,6 @@ CustomButton ToggleButton;
 CustomUI::TextObject ChangesMadeText;
 
 Il2CppObject* restartImage;
-=======
-Il2CppObject* PlayButton;
-
-Il2CppObject* SwitchButton;
-Il2CppObject* SwitchButtonTMP;
-
-Il2CppObject* ToggleButton;
-Il2CppObject* ToggleButtonTMP;
->>>>>>> 6d6f8c50b9866a354075971468ec4abea89b0842
 
 enum UI 
 {
@@ -32,7 +22,6 @@ enum UI
 	WallsLeft,
 	NotesLeft,
 	PlayCount,
-<<<<<<< HEAD
 	LegacyAcc,
 } UIType;
 
@@ -72,11 +61,6 @@ Il2CppObject* setParentTransform(Il2CppObject* Obj, int parentedAmount) {
 	return parentTransform;
 }
 
-=======
-} UIType;
-
-int index = 0;
->>>>>>> 6d6f8c50b9866a354075971468ec4abea89b0842
 
 void SetConfigValue(UI Type, bool Value)
 {
@@ -106,7 +90,6 @@ void SetConfigValue(UI Type, bool Value)
 	case NotesLeft:
 		getConfig().config["Notes Left / Note Percentage"].SetBool(Value);
 		break;
-<<<<<<< HEAD
 	case PlayCount:
 		getConfig().config["Play Count(er)"].SetBool(Value);
 		break;
@@ -119,14 +102,6 @@ void SetConfigValue(UI Type, bool Value)
 	getConfig().Write();
 	setActive(ChangesMadeText.gameObj, true);
 	SetPropertyValue(restartImage, "color", Changes);
-=======
-		case PlayCount:
-		getConfig().config["Play Count(er)"].SetBool(Value);
-		break;
-	default:
-		break;
-	}
->>>>>>> 6d6f8c50b9866a354075971468ec4abea89b0842
 }
 
 bool GetConfigValue(UI Type)
@@ -158,18 +133,12 @@ bool GetConfigValue(UI Type)
 	case NotesLeft:
 		return getConfig().config["Notes Left / Note Percentage"].GetBool();
 		break;
-<<<<<<< HEAD
 	case PlayCount:
 		return getConfig().config["Play Count(er)"].GetBool();
 		break;
 	case LegacyAcc:
 		return getConfig().config["Use Legacy Acc Counter"].GetBool();
 		break;
-=======
-		case PlayCount:
-		return getConfig().config["Play Count(er)"].GetBool();
-		break;
->>>>>>> 6d6f8c50b9866a354075971468ec4abea89b0842
 	default:
 		break;
 	}
@@ -204,18 +173,12 @@ std::string GetText(UI Type)
 	case NotesLeft:
 		return "Notes Left";
 		break;
-<<<<<<< HEAD
 	case PlayCount:
 		return "Play Count";
 		break;
 	case LegacyAcc:
 		return "Legacy Acc Counter";
 		break;
-=======
-		case PlayCount:
-		return "Play Count";
-		break;
->>>>>>> 6d6f8c50b9866a354075971468ec4abea89b0842
 	default:
 		return "Unknow poggers";
 		break;
@@ -230,25 +193,16 @@ std::string GetEnabledText(UI Type)
 void SwitchCounter()
 {
 	index++;
-<<<<<<< HEAD
 	if(index == 10) index = 0;
 	UIType = (UI)index;
 	std::string Text = GetText(UI(index));
     RunMethod(SwitchButton.TMP, "set_text", createcsstr(Text));
 	RunMethod(ToggleButton.TMP, "set_text", createcsstr(GetEnabledText(UI(index))));
-=======
-	if(index == 9) index = 0;
-	UIType = (UI)index;
-	std::string Text = GetText(UI(index));
-    RunMethod(SwitchButtonTMP, "set_text", createcsstr(Text));
-	RunMethod(ToggleButtonTMP, "set_text", createcsstr(GetEnabledText(UI(index))));
->>>>>>> 6d6f8c50b9866a354075971468ec4abea89b0842
 }
 
 void Toggle()
 {
 	SetConfigValue(UI(index) , ! GetConfigValue(UI(index)));
-<<<<<<< HEAD
 	RunMethod(ToggleButton.TMP, "set_text", createcsstr(GetEnabledText(UI(index))));
 }
 
@@ -318,60 +272,4 @@ void SettingsUI_End()
 {
 	ToggleButton.destroy();
 	SwitchButton.destroy();
-=======
-	RunMethod(ToggleButtonTMP, "set_text", createcsstr(GetEnabledText(UI(index))));
-}
-
-void Destroy(Il2CppObject* obj)
-{
-    RunMethod("UnityEngine", "Object", "Destroy", obj);
-}
-
-void SettingsUI_Start(Il2CppObject* self)
-{
-	//Switch
-	Vector3 Pos = {0, 0, 2.0f};
-    Vector3 Scale = {1, 1, 1};
-	PlayButton = *GetFieldValue(self, "_continueButton");	
-	index = 0;
-	SwitchButton = *RunMethod("UnityEngine", "Object", "Instantiate", PlayButton);
-    auto PlayButtonTransform = CRASH_UNLESS(il2cpp_utils::RunMethod(PlayButton, "get_transform"));
-    auto parent = CRASH_UNLESS(il2cpp_utils::RunMethod(PlayButtonTransform, "get_parent"));
-    Il2CppObject* OnClick = CRASH_UNLESS(il2cpp_utils::GetPropertyValue(SwitchButton, "onClick"));
-	std::string SwitchButtonText = GetText(UI(index));
-	auto SwitchButtonTransform = CRASH_UNLESS(il2cpp_utils::RunMethod(SwitchButton, "get_transform"));
-	RunMethod(SwitchButtonTransform, "SetParent", parent);
-	RunMethod(SwitchButtonTransform, "set_position", Pos);
-    RunMethod(SwitchButtonTransform, "set_localScale", Scale);
-    Il2CppObject* SwitchButtonObj2 = *RunMethod(SwitchButton, "get_gameObject");
-    SwitchButtonTMP = *RunMethod(SwitchButtonObj2, "GetComponentInChildren", GetSystemType("TMPro", "TextMeshProUGUI"));
-    auto SwitchButtonTMPLocalizer = *RunMethod(SwitchButtonObj2, "GetComponentInChildren", GetSystemType("Polyglot", "LocalizedTextMeshProUGUI"));
-    if (SwitchButtonTMPLocalizer != nullptr)
-    {
-        Destroy(SwitchButtonTMPLocalizer);
-    }
-    RunMethod(SwitchButtonTMP, "set_text", createcsstr(SwitchButtonText));
-    auto action = MakeAction(il2cpp_functions::class_get_type(il2cpp_utils::GetClassFromName("UnityEngine.Events", "UnityAction")), (Il2CppObject*)nullptr, SwitchCounter);
-    RunMethod(OnClick, "AddListener", action);
-	
-	//Toggle
-
-	ToggleButton = *RunMethod("UnityEngine", "Object", "Instantiate", PlayButton);
-    Il2CppObject* OnClick2 = CRASH_UNLESS(il2cpp_utils::GetPropertyValue(ToggleButton, "onClick"));
-	std::string ToggleButtonText = GetText(UI(index));
-	auto ToggleButtonTransform = CRASH_UNLESS(il2cpp_utils::RunMethod(ToggleButton, "get_transform"));
-	RunMethod(ToggleButtonTransform, "SetParent", parent);
-	RunMethod(ToggleButtonTransform, "set_position", Pos);
-    RunMethod(ToggleButtonTransform, "set_localScale", Scale);
-    Il2CppObject* ToggleButtonObj2 = *RunMethod(ToggleButton, "get_gameObject");
-    ToggleButtonTMP = *RunMethod(ToggleButtonObj2, "GetComponentInChildren", GetSystemType("TMPro", "TextMeshProUGUI"));
-    auto ToggleButtonTMPLocalizer = *RunMethod(ToggleButtonObj2, "GetComponentInChildren", GetSystemType("Polyglot", "LocalizedTextMeshProUGUI"));
-    if (ToggleButtonTMPLocalizer != nullptr)
-    {
-        Destroy(ToggleButtonTMPLocalizer);
-    }
-    RunMethod(ToggleButtonTMP, "set_text", createcsstr(GetEnabledText(UI(index))));
-    auto action2 = MakeAction(il2cpp_functions::class_get_type(il2cpp_utils::GetClassFromName("UnityEngine.Events", "UnityAction")), (Il2CppObject*)nullptr, Toggle);
-    RunMethod(OnClick2, "AddListener", action2);
->>>>>>> 6d6f8c50b9866a354075971468ec4abea89b0842
 }
