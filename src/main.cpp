@@ -78,7 +78,7 @@ MAKE_HOOK_OFFSETLESS(UIStart, void, Il2CppObject* self) {
 MAKE_HOOK_OFFSETLESS(FinishScore, void, Il2CppObject* self, Il2CppObject* swingRatingCounter) {
     FinishScore(self, swingRatingCounter);
     if(NoHud) return;
-    if(Config.useLegacyAcc)
+    if(getConfig().config["Use Legacy Acc Counter"].GetBool())
     {
         Accuracy_FinishScore();
     }
