@@ -23,6 +23,7 @@ enum UI
 	NotesLeft,
 	PlayCount,
 	LegacyAcc,
+	PPCounter,
 } UIType;
 
 int index = 0;
@@ -96,6 +97,9 @@ void SetConfigValue(UI Type, bool Value)
 	case LegacyAcc:
 		getConfig().config["Use Legacy Acc Counter"].SetBool(Value);
 		break;
+	case PPCounter:
+		getConfig().config["PP Counter"].SetBool(Value);
+		break;
 	default:
 		break;
 	}
@@ -139,6 +143,9 @@ bool GetConfigValue(UI Type)
 	case LegacyAcc:
 		return getConfig().config["Use Legacy Acc Counter"].GetBool();
 		break;
+	case PPCounter:
+		return getConfig().config["PP Counter"].GetBool();
+		break;
 	default:
 		break;
 	}
@@ -179,6 +186,9 @@ std::string GetText(UI Type)
 	case LegacyAcc:
 		return "Legacy Acc Counter";
 		break;
+	case PPCounter:
+		return "PP Counter";
+		break;
 	default:
 		return "Unknow poggers";
 		break;
@@ -193,7 +203,7 @@ std::string GetEnabledText(UI Type)
 void SwitchCounter()
 {
 	index++;
-	if(index == 10) index = 0;
+	if(index == 11) index = 0;
 	UIType = (UI)index;
 	std::string Text = GetText(UI(index));
     RunMethod(SwitchButton.TMP, "set_text", createcsstr(Text));
