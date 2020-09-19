@@ -7,9 +7,9 @@ SongID songID = SongID(std::string("Wow"), BeatmapDifficulty::Easy);
 GameplayModifiers* mods;
 
 
-void PP_Init(IDifficultyBeatmap diff, std::string SongID, GameplayModifiers* Mods)
+void PP_Init(IDifficultyBeatmap* diff, std::string SongID, GameplayModifiers* Mods)
 {
-	songID.difficulty = diff.get_difficulty();
+	songID.difficulty = diff->get_difficulty();
 	songID.id = SongID;
 	mods = Mods;
 }
