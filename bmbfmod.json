@@ -19,15 +19,23 @@
                 "removeLibraryFile": "libquestcounters.so"
             }
         },
-	{
-            "type": "FileCopyMod",
-            "sourceFileName": "libbeatsaber-hook_0_4_8.so",
-            "targetRootedPathAndFileName": "/sdcard/Android/data/com.beatgames.beatsaber/files/libs/libbeatsaber-hook_0_4_8.so"
+	    {
+            "type": "HookModLibrary",
+            "installAction": {
+                "installLibraryFile": "libbeatsaber-hook_0_6_0.so"
+            }
         },
-	{
-            "type": "FileCopyMod",
-            "sourceFileName": "libcustomui-Idfkwhatversion.so",
-            "targetRootedPathAndFileName": "/sdcard/Android/data/com.beatgames.beatsaber/files/libs/libcustomui-Idfkwhatversion.so"
+        {
+            "type": "HookModLibrary",
+            "installAction": {
+                "installLibraryFile": "libcustom-ui_0_1_1.so"
+            }
+        },
+        {
+            "type": "HookModLibrary",
+            "installAction": {
+                "installLibraryFile": "libcodegen_0_2_4.so"
+            }
         }
     ]
 }

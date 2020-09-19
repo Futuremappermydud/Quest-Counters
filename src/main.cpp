@@ -157,7 +157,7 @@ MAKE_HOOK_OFFSETLESS(Speed, void, Il2CppObject* self)
 MAKE_HOOK_OFFSETLESS(CheckVersion, void, Il2CppObject* self, bool firstActivation, int activationType)
 {
     Update_Update();
-    PPDownloader_instance.PPDownloader_WebRequest();
+    PPDownloader_WebRequest();
     CheckVersion(self, firstActivation, activationType);
 }
 

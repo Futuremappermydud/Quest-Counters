@@ -4,6 +4,8 @@
 
 #include <unordered_set>
 #include <map>
+#include <list>
+#include<tuple> // for tuple 
 
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-utils.hpp"  
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"  
@@ -256,22 +258,6 @@ extern CustomButton SwitchButton;
 
 extern CustomButton ToggleButton;
 
-class PPDownloader
-{
-	private:
-	const std::string URI_PREFIX;
-	const std::string FILE_NAME;
+extern void PPDownloader_CompletedWebRequest();
 
-	Il2CppObject* WebRequestAPI;
-	Il2CppObject* DownloadHandler;
-	Il2CppObject* WebRequestAsyncOp;
-	Il2CppString* JsonStr;
- 
-	public:
-
-	void PPDownloader_CompletedWebRequest();
-
-	void PPDownloader_WebRequest();
-};
-
-static PPDownloader PPDownloader_instance = PPDownloader();
+extern void PPDownloader_WebRequest();
