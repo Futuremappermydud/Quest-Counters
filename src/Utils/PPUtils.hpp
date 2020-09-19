@@ -79,3 +79,7 @@ void PPData_Init(std::map<std::string, RawPPData> PPData);
 float GetPP(SongID songID);
 
 bool IsRanked(SongID songID);
+
+float CalculatePP(SongID songID, float accuracy);
+
+void InitializePPUtils();

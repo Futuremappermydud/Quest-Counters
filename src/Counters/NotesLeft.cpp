@@ -24,7 +24,7 @@ void NotesLeft_Update()
     }
 }
 
-void NotesLeft_GetNotes(Il2CppObject* difficultyBeatmap) {
+void NotesLeft_GetNotes(IDifficultyBeatmap* difficultyBeatmap) {
     Il2CppObject* beatmapData;
     beatmapData = *il2cpp_utils::RunMethod<Il2CppObject*>( difficultyBeatmap, "get_beatmapData");
     NotesCount = *il2cpp_utils::RunMethod<int>( beatmapData, "get_notesCount");

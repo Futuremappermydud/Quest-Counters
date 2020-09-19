@@ -70,6 +70,10 @@ MAKE_HOOK_OFFSETLESS(UIStart, void, Il2CppObject* self) {
     {
         PC_Start(self);
     }
+    if(getConfig().config["PP Counter"].GetBool())
+    {
+        PP_Start(self);
+    }
 }
 
 MAKE_HOOK_OFFSETLESS(FinishScore, void, Il2CppObject* self, Il2CppObject* swingRatingCounter) {
@@ -99,7 +103,9 @@ MAKE_HOOK_OFFSETLESS(RawScore, void, Il2CppObject* noteCutInfo, int* beforeCutRa
     }
 }
 
-MAKE_HOOK_OFFSETLESS(SongStart, void, Il2CppObject* self, Il2CppObject* difficultyBeatmap, Il2CppObject* overrideEnvironmentSettings, Il2CppObject* overrideColorScheme, Il2CppObject* gameplayModifiers, Il2CppObject* playerSpecificSettings, Il2CppObject* practiceSettings, Il2CppString* backButtonText, bool useTestNoteCutSoundEffects) {
+MAKE_HOOK_OFFSETLESS(SongStart, void, Il2CppObject* self, IDifficultyBeatmap* difficultyBeatmap, Il2CppObject* overrideEnvironmentSettings, Il2CppObject* overrideColorScheme, GameplayModifiers* gameplayModifiers, Il2CppObject* playerSpecificSettings, Il2CppObject* practiceSettings, Il2CppString* backButtonText, bool useTestNoteCutSoundEffects) {
+    PP_Init(difficultyBeatmap, to_utf8(csstrtostr(difficultyBeatmap->get_level()->get_levelID())), gameplayModifiers);
+    
     ToggleButton.destroy();
     SwitchButton.destroy();
 
@@ -165,6 +171,7 @@ MAKE_HOOK_OFFSETLESS(StartVersion, void, Il2CppObject* self, bool firstActivatio
 {
     StartVersion(self, firstActivation, activationType);
     Update_Start(self);
+    
 }
 
 MAKE_HOOK_OFFSETLESS(StandardLevelDetailView_RefreshContent, void, Il2CppObject * self) {
@@ -197,6 +204,7 @@ MAKE_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, void, Il2CppOb
     RelativeScoreAndImmediateRankCounter_Update(self, score, modifiedScore, maxPossibleScore, maxPossibleModifiedScore);
     float num = (float)score / (float)maxPossibleScore;
     PB_Update(num * 100.0f);
+    PP_Update(num * 100.0f);
 }
 
 MAKE_HOOK_OFFSETLESS(StartConfigUI, void, Il2CppObject* self)

@@ -22,7 +22,7 @@ void WallsLeft_Update() {
   }
 }
 
-void WallsLeft_GetWalls(Il2CppObject* difficultyBeatmap) {
+void WallsLeft_GetWalls(IDifficultyBeatmap* difficultyBeatmap) {
   Il2CppObject* beatmapData = *il2cpp_utils::RunMethod<Il2CppObject*>(
       difficultyBeatmap, "get_beatmapData");
   WallsCount = *il2cpp_utils::RunMethod<int>(beatmapData, "get_obstaclesCount");

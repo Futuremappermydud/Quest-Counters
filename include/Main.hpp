@@ -55,7 +55,7 @@ void New_Accuracy_FinishScore();
 void New_Accuracy_RawScore(Il2CppObject* noteCutInfo, int* beforeCutRawScore, int* afterCutRawScore, int* cutDistanceRawScore);
 
 //Notes Left
-void NotesLeft_GetNotes(Il2CppObject* difficultyBeatmap);
+void NotesLeft_GetNotes(IDifficultyBeatmap* difficultyBeatmap);
 
 void NotesLeft_Start(Il2CppObject* self);
 
@@ -101,7 +101,7 @@ extern int ModdedScore;
 //Walls Left
 void WallsLeft_Update();
 
-void WallsLeft_GetWalls(Il2CppObject* difficultyBeatmap);
+void WallsLeft_GetWalls(IDifficultyBeatmap* difficultyBeatmap);
 
 void WallsLeft_Start(Il2CppObject* self);
 
@@ -258,6 +258,12 @@ extern CustomButton SwitchButton;
 
 extern CustomButton ToggleButton;
 
-extern void PPDownloader_CompletedWebRequest();
+void PPDownloader_CompletedWebRequest();
 
-extern void PPDownloader_WebRequest();
+void PPDownloader_WebRequest();
+
+void PP_Init(IDifficultyBeatmap* diff, std::string SongID, GameplayModifiers* Mods);
+
+void PP_Start(Il2CppObject *self);
+
+void PP_Update(float Percentage);

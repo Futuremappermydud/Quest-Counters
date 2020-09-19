@@ -13,6 +13,7 @@ void SaveConfig() {
     getConfig().config.AddMember("Hit Bomb Counter", Config.BombHits, allocator);
     getConfig().config.AddMember("Walls Left / Wall Percentage", Config.WallsLeft, allocator);
     getConfig().config.AddMember("Play Count(er)", Config.playCount, allocator);
+    getConfig().config.AddMember("PP Counter", Config.PPCounter, allocator);
     getConfig().config.AddMember("Use Legacy Acc Counter", Config.useLegacyAcc, allocator);
     //ConfigValue HitCounter(rapidjson::kObjectType);
     //getConfig().config.AddMember("Hit Counter Settings", HitCounter, allocator);
@@ -79,6 +80,12 @@ bool LoadConfig() {
     }
     if (getConfig().config.HasMember("Use Legacy Acc Counter") && getConfig().config["Use Legacy Acc Counter"].IsBool()) {
         Config.useLegacyAcc = getConfig().config["Use Legacy Acc Counter"].GetBool();
+    }
+    else {
+        foundEverything = false;
+    }
+    if (getConfig().config.HasMember("PP Counter") && getConfig().config["PP Counter"].IsBool()) {
+        Config.PPCounter = getConfig().config["PP Counter"].GetBool();
     }
     else {
         foundEverything = false;
