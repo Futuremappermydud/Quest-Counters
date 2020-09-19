@@ -13,6 +13,8 @@
 #define VERSION "0.0.0"
 #endif
 
+bool Logger::silent = false;
+
 const Logger& Logger::get() {
     static Logger utilsLogger("UtilsLogger|v" VERSION);
     return utilsLogger;
@@ -28,6 +30,9 @@ Logger::Logger(ModInfo info) {
 
 #define LOG_MAX_CHARS 1000
 void Logger::log(Logging::Level lvl, std::string str) const {
+    if (silent) {
+        return;
+    }
     if (str.length() > LOG_MAX_CHARS) {
         std::size_t i = 0;
         while (i < str.length()) {
@@ -47,6 +52,9 @@ void Logger::log(Logging::Level lvl, std::string str) const {
 }
 
 void Logger::log(Logging::Level lvl, std::string_view fmt, ...) const {
+    if (silent) {
+        return;
+    }
     va_list args;
     va_start(args, fmt);
     auto s = string_vformat(fmt, args);
@@ -55,6 +63,9 @@ void Logger::log(Logging::Level lvl, std::string_view fmt, ...) const {
 }
 
 void Logger::critical(std::string_view fmt, ...) const {
+    if (silent) {
+        return;
+    }
     va_list args;
     va_start(args, fmt);
     auto s = string_vformat(fmt, args);
@@ -63,6 +74,9 @@ void Logger::critical(std::string_view fmt, ...) const {
 }
 
 void Logger::error(std::string_view fmt, ...) const {
+    if (silent) {
+        return;
+    }
     va_list args;
     va_start(args, fmt);
     auto s = string_vformat(fmt, args);
@@ -71,6 +85,9 @@ void Logger::error(std::string_view fmt, ...) const {
 }
 
 void Logger::warning(std::string_view fmt, ...) const {
+    if (silent) {
+        return;
+    }
     va_list args;
     va_start(args, fmt);
     auto s = string_vformat(fmt, args);
@@ -79,6 +96,9 @@ void Logger::warning(std::string_view fmt, ...) const {
 }
 
 void Logger::info(std::string_view fmt, ...) const {
+    if (silent) {
+        return;
+    }
     va_list args;
     va_start(args, fmt);
     auto s = string_vformat(fmt, args);
@@ -87,6 +107,9 @@ void Logger::info(std::string_view fmt, ...) const {
 }
 
 void Logger::debug(std::string_view fmt, ...) const {
+    if (silent) {
+        return;
+    }
     va_list args;
     va_start(args, fmt);
     auto s = string_vformat(fmt, args);

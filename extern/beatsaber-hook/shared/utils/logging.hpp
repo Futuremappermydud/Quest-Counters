@@ -111,7 +111,20 @@ class Logger {
         void debug(std::string_view fmt, ...) const;
         // Returns the logger that is used within the utils library. This function should not be used outside of the main library
         static const Logger& get();
+        /// @brief Call this to silence all beatsaber-hook specific logs. Should improve performance slightly.
+        /// Note that this call causes ALL calls to this bs-hook to be silent, including from other mods.
+        /// Should only be used in particular cases.
+        static inline void disable() {
+            silent = true;
+        }
+        /// @brief Call this to re-enable all beatsaber-hook specific logs. Decreases performance slightly, but provides debug information.
+        /// Note that this call causes ALL calls to this bs-hook version to be enabled again, including from other mods that want silence.
+        /// Should only be used in particular cases.
+        static inline void enable() {
+            silent = false;
+        }
     private:
+        static bool silent;
         std::string tag;
 };
 

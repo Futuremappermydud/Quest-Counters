@@ -1,0 +1,23 @@
+{
+  "sharedDir": "shared",
+  "dependenciesDir": "extern",
+  "info": {
+    "name": "custom-ui",
+    "id": "custom-ui",
+    "version": "0.1.1",
+    "url": null,
+    "additionalData": {
+      "branchName": "version-v0.1.1",
+      "soLink": "https://github.com/sc2ad/BeatSaberQuestCustomUI/releases/download/v0.1.1/libcustom-ui_0_1_1.so.so",
+      "debugSoLink": "https://github.com/sc2ad/BeatSaberQuestCustomUI/releases/download/v0.1.1/debug_libcustom-ui_0_1_1.so"
+    }
+  },
+  "dependencies": [
+    {
+      "id": "beatsaber-hook",
+      "versionRange": "^0.6.0",
+      "additionalData": {}
+    }
+  ],
+  "additionalData": {}
+}

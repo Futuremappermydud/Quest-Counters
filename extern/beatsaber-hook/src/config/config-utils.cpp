@@ -22,7 +22,7 @@ using namespace rapidjson;
 
 bool Configuration::ensureObject() {
     if (!config.IsObject()) {
-        Logger::get().warning("Config data for mod %s was invalid! Clearing.");
+        Logger::get().warning("Config data for mod was invalid! Clearing.");
         config.SetObject();
         return false;
     }

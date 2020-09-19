@@ -285,6 +285,7 @@ std::string (*il2cpp_functions::_Type_GetName_)(const Il2CppType *type, Il2CppTy
 #else
 gnu_string (*il2cpp_functions::_Type_GetName_)(const Il2CppType *type, Il2CppTypeNameFormat format);
 #endif
+void (*il2cpp_functions::GC_free)(void* addr);
 
 Il2CppClass* (*il2cpp_functions::Class_FromIl2CppType)(Il2CppType* typ);
 Il2CppClass* (*il2cpp_functions::Class_GetPtrClass)(Il2CppClass* elementClass);
@@ -928,9 +929,8 @@ void il2cpp_functions::Init() {
 
     // GenericClass::GetClass. offset 0x88DF64 in 1.5, 0xA34F20 in 1.7.0, 0xA6E4EC in 1.8.0b1
     Instruction cfit((const int32_t*)class_from_il2cpp_type);
-    Instruction Class_FromIl2CppType_inst(CRASH_UNLESS(cfit.label));
-    Class_FromIl2CppType = (decltype(Class_FromIl2CppType))CRASH_UNLESS(Class_FromIl2CppType_inst.addr);
-    auto caseStart = CRASH_UNLESS(EvalSwitch(Class_FromIl2CppType_inst.addr, 1, 1, IL2CPP_TYPE_GENERICINST));
+    Class_FromIl2CppType = (decltype(Class_FromIl2CppType))CRASH_UNLESS(cfit.label);
+    auto caseStart = CRASH_UNLESS(EvalSwitch(Class_FromIl2CppType, 1, 1, IL2CPP_TYPE_GENERICINST));
     auto j2GC_GC = CRASH_UNLESS(caseStart->findNthDirectBranchWithoutLink(1));
     Logger::get().debug("j2GC_GC: %s", j2GC_GC->toString().c_str());
     GenericClass_GetClass = (decltype(GenericClass_GetClass))CRASH_UNLESS(j2GC_GC->label);
@@ -938,7 +938,7 @@ void il2cpp_functions::Init() {
     usleep(1000);  // 0.001s
 
     // Class::GetPtrClass.
-    auto ptrCase = CRASH_UNLESS(EvalSwitch(Class_FromIl2CppType_inst.addr, 1, 1, IL2CPP_TYPE_PTR));
+    auto ptrCase = CRASH_UNLESS(EvalSwitch(Class_FromIl2CppType, 1, 1, IL2CPP_TYPE_PTR));
     auto j2C_GPC = CRASH_UNLESS(ptrCase->findNthDirectBranchWithoutLink(1));
     Logger::get().debug("j2C_GPC: %s", j2C_GPC->toString().c_str());
     Class_GetPtrClass = (decltype(Class_GetPtrClass))CRASH_UNLESS(j2C_GPC->label);
@@ -950,6 +950,17 @@ void il2cpp_functions::Init() {
     auto j2A_GAA = CRASH_UNLESS(dga.findNthCall(1));    
     Assembly_GetAllAssemblies = (decltype(Assembly_GetAllAssemblies))CRASH_UNLESS(j2A_GAA->label);
     Logger::get().debug("Assembly::GetAllAssemblies found? offset: %lX", ((intptr_t)Assembly_GetAllAssemblies) - getRealOffset(0));
+    usleep(1000);  // 0.001s
+
+    CRASH_UNLESS(shutdown);
+    // GC_free
+    Instruction sd((const int32_t*)shutdown);
+    auto* Runtime_Shutdown = CRASH_UNLESS(sd.label);
+    Instruction Runtime_Shutdown_inst(Runtime_Shutdown);
+    auto j2GC_FF = CRASH_UNLESS(Runtime_Shutdown_inst.findNthCall(5));
+    Instruction GC_FreeFixed(CRASH_UNLESS(j2GC_FF->label));
+    GC_free = (decltype(GC_free))CRASH_UNLESS(GC_FreeFixed.label);
+    Logger::get().debug("gc::GarbageCollector::FreeFixed found? offset: %lX", ((intptr_t)GC_free) - getRealOffset(0));
     usleep(1000);  // 0.001s
 
     Instruction iu16((const int32_t*)init_utf16);
@@ -976,17 +987,11 @@ void il2cpp_functions::Init() {
     Logger::get().debug("All global constants found!");
 
     #ifdef FILE_LOG
-    if (il2cpp_functions::shutdown) {
-        Instruction sd((const int32_t*)il2cpp_functions::shutdown);
-        if (sd.label) {
-            auto Runtime_Shutdown = *(sd.label);
-            Logger::get().info("hook installing to: %p (offset %lX)", Runtime_Shutdown, ((intptr_t)Runtime_Shutdown) - getRealOffset(0));
-            INSTALL_HOOK_DIRECT(shutdown_hook, Runtime_Shutdown);
-        } else {
-            Logger::get().critical("Failed to parse il2cpp_shutdown's implementation address! Could not install shutdown hook for closing file logs.");
-        }
+    if (Runtime_Shutdown) {
+        Logger::get().info("hook installing to: %p (offset %lX)", Runtime_Shutdown, ((intptr_t)Runtime_Shutdown) - getRealOffset(0));
+        INSTALL_HOOK_DIRECT(shutdown_hook, Runtime_Shutdown);
     } else {
-        Logger::get().critical("Failed to get address of il2cpp_shutdown (see above)! Could not install shutdown hook for closing file logs.");
+        Logger::get().critical("Failed to parse il2cpp_shutdown's implementation address! Could not install shutdown hook for closing file logs.");
     }
     #endif
 

@@ -2,9 +2,6 @@
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-utils.hpp"
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"
 #include "../extern/beatsaber-hook/shared/utils/utils.h"
-#include "../extern/BeatSaberQuestCustomUI-master/shared/customui.hpp"
-using namespace il2cpp_utils;
-using namespace CustomUI;
 
 bool _360 = false;
 
@@ -160,6 +157,7 @@ MAKE_HOOK_OFFSETLESS(Speed, void, Il2CppObject* self)
 MAKE_HOOK_OFFSETLESS(CheckVersion, void, Il2CppObject* self, bool firstActivation, int activationType)
 {
     Update_Update();
+    PPDownloader_instance.PPDownloader_WebRequest();
     CheckVersion(self, firstActivation, activationType);
 }
 

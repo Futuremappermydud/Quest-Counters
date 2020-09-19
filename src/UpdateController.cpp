@@ -1,5 +1,4 @@
 #include "include/Main.hpp"
-#include "../extern/BeatSaberQuestCustomUI-master/shared/customui.hpp"
 
 std::string URL = "https://raw.githubusercontent.com/Futuremappermydud/Quest-Counters/master/ASSETS/ver.txt";
 

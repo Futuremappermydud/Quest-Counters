@@ -1,4 +1,4 @@
-#include "../../shared/utils/instruction-parsing.hpp"
+﻿#include "../../shared/utils/instruction-parsing.hpp"
 #include "../../shared/utils/utils.h"
 #include <functional>
 #include <new>
@@ -247,9 +247,9 @@ Instruction::Instruction(const int32_t* inst) {
                             }
                         } else {
                             if (sf == 0) {
-                                kind[parseLevel++] = "ORR (shifted register) — 32-bit";
+                                kind[parseLevel++] = "ORR (shifted register) - 32-bit";
                             } else {
-                                kind[parseLevel++] = "ORR (shifted register) — 64-bit";
+                                kind[parseLevel++] = "ORR (shifted register) - 64-bit";
                             }
                         }
                     }
@@ -270,14 +270,14 @@ Instruction::Instruction(const int32_t* inst) {
                         // TODO: if sf == 0, all regs are 32-bit views
                         if (op == 0) {
                             if (S == 0) {
-                                kind[parseLevel++] = sf ? "ADD (shifted register) — 64-bit" : "ADD (shifted register) — 32-bit";
+                                kind[parseLevel++] = sf ? "ADD (shifted register) - 64-bit" : "ADD (shifted register) - 32-bit";
                             } else {
                                 if (Rd == RZR) {
                                     // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/cmn-shifted-register-compare-negative-shifted-register-an-alias-of-adds-shifted-register
                                     kind[parseLevel++] = "CMN (shifted register)";  // preferred alias
                                     Rd = -1;
                                 } else {
-                                    kind[parseLevel++] = sf ? "ADDS (shifted register) — 64-bit" : "ADDS (shifted register) — 32-bit";
+                                    kind[parseLevel++] = sf ? "ADDS (shifted register) - 64-bit" : "ADDS (shifted register) - 32-bit";
                                 }
                             }
                         } else {
@@ -288,7 +288,7 @@ Instruction::Instruction(const int32_t* inst) {
                                     Rs[0] = Rs[1];
                                     numSourceRegisters = 1;
                                 } else {
-                                    kind[parseLevel++] = sf ? "SUB (shifted register) — 64-bit" : "SUB (shifted register) — 32-bit";
+                                    kind[parseLevel++] = sf ? "SUB (shifted register) - 64-bit" : "SUB (shifted register) - 32-bit";
                                 }
                             } else {
                                 if (Rd == RZR) {
@@ -301,7 +301,7 @@ Instruction::Instruction(const int32_t* inst) {
                                     Rs[0] = Rs[1];
                                     numSourceRegisters = 1;
                                 } else {
-                                    kind[parseLevel++] = sf ? "SUBS (shifted register) — 64-bit" : "SUBS (shifted register) — 32-bit";
+                                    kind[parseLevel++] = sf ? "SUBS (shifted register) - 64-bit" : "SUBS (shifted register) - 32-bit";
                                 }
                             }
                         }
@@ -330,14 +330,14 @@ Instruction::Instruction(const int32_t* inst) {
                         // TODO: if sf == 0, all regs are 32-bit views; else all are 64-bit except Rm is a 32-bit view iff option != x11
                         if (op == 0) {
                             if (S == 0) {
-                                kind[parseLevel++] = sf ? "ADD (shifted register) — 64-bit" : "ADD (shifted register) — 32-bit";
+                                kind[parseLevel++] = sf ? "ADD (shifted register) - 64-bit" : "ADD (shifted register) - 32-bit";
                             } else {
                                 if (Rd == RZR) {
                                     // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/cmn-shifted-register-compare-negative-shifted-register-an-alias-of-adds-shifted-register
                                     kind[parseLevel++] = "CMN (shifted register)";  // preferred alias
                                     Rd = -1;
                                 } else {
-                                    kind[parseLevel++] = sf ? "ADDS (shifted register) — 64-bit" : "ADDS (shifted register) — 32-bit";
+                                    kind[parseLevel++] = sf ? "ADDS (shifted register) - 64-bit" : "ADDS (shifted register) - 32-bit";
                                 }
                             }
                         } else {
@@ -348,7 +348,7 @@ Instruction::Instruction(const int32_t* inst) {
                                     Rs[0] = Rs[1];
                                     numSourceRegisters = 1;
                                 } else {
-                                    kind[parseLevel++] = sf ? "SUB (shifted register) — 64-bit" : "SUB (shifted register) — 32-bit";
+                                    kind[parseLevel++] = sf ? "SUB (shifted register) - 64-bit" : "SUB (shifted register) - 32-bit";
                                 }
                             } else {
                                 if (Rd == RZR) {
@@ -361,7 +361,7 @@ Instruction::Instruction(const int32_t* inst) {
                                     Rs[0] = Rs[1];
                                     numSourceRegisters = 1;
                                 } else {
-                                    kind[parseLevel++] = sf ? "SUBS (shifted register) — 64-bit" : "SUBS (shifted register) — 32-bit";
+                                    kind[parseLevel++] = sf ? "SUBS (shifted register) - 64-bit" : "SUBS (shifted register) - 32-bit";
                                 }
                             }
                         }
@@ -387,15 +387,15 @@ Instruction::Instruction(const int32_t* inst) {
                     kind[parseLevel++] = unalloc;
                 } else if (op == 0) {
                     if (op2 == 0) {
-                        kind[parseLevel++] = sf ? "CSEL — 64-bit" : "CSEL — 32-bit";
+                        kind[parseLevel++] = sf ? "CSEL - 64-bit" : "CSEL - 32-bit";
                     } else {
-                        kind[parseLevel++] = sf ? "CSINC — 64-bit" : "CSINC — 32-bit";
+                        kind[parseLevel++] = sf ? "CSINC - 64-bit" : "CSINC - 32-bit";
                     }
                 } else {  // op == 1
                     if (op2 == 0) {
-                        kind[parseLevel++] = sf ? "CSINV — 64-bit" : "CSINV — 32-bit";
+                        kind[parseLevel++] = sf ? "CSINV - 64-bit" : "CSINV - 32-bit";
                     } else {
-                        kind[parseLevel++] = sf ? "CSNEG — 64-bit" : "CSNEG — 32-bit";
+                        kind[parseLevel++] = sf ? "CSNEG - 64-bit" : "CSNEG - 32-bit";
                     }
                 }
             } else if ((op2 & 0b1000) == 0b1000) {  // 1xxx
@@ -425,14 +425,14 @@ Instruction::Instruction(const int32_t* inst) {
                             // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/mul-multiply-an-alias-of-madd
                             kind[parseLevel++] = "MUL";  // preferred alias
                         } else {
-                            kind[parseLevel++] = sf ? "MADD — 64-bit" : "MADD — 32-bit";
+                            kind[parseLevel++] = sf ? "MADD - 64-bit" : "MADD - 32-bit";
                         }
                     } else {
                         if (Ra == RZR) {
                             // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/mneg-multiply-negate-an-alias-of-msub
                             kind[parseLevel++] = "MNEG";  // preferred alias
                         } else {
-                            kind[parseLevel++] = sf ? "MSUB — 64-bit" : "MSUB — 32-bit";
+                            kind[parseLevel++] = sf ? "MSUB - 64-bit" : "MSUB - 32-bit";
                         }
                     }
                 } else {
@@ -533,7 +533,7 @@ Instruction::Instruction(const int32_t* inst) {
                             // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/mov-tofrom-sp-move-between-register-and-stack-pointer-an-alias-of-add-immediate
                             kind[parseLevel++] = "MOV (to/from SP)";  // preferred alias
                         } else {
-                            kind[parseLevel++] = sf ? "ADD (immediate) — 64-bit" : "ADD (immediate) — 32-bit";
+                            kind[parseLevel++] = sf ? "ADD (immediate) - 64-bit" : "ADD (immediate) - 32-bit";
                         }
                     } else {
                         if (Rd == RZR) {
@@ -541,20 +541,20 @@ Instruction::Instruction(const int32_t* inst) {
                             kind[parseLevel++] = "CMN (immediate)";  // preferred alias
                             Rd = -1;
                         } else {
-                            kind[parseLevel++] = sf ? "ADDS (immediate) — 64-bit" : "ADDS (immediate) — 32-bit";
+                            kind[parseLevel++] = sf ? "ADDS (immediate) - 64-bit" : "ADDS (immediate) - 32-bit";
                         }
                     }
                 } else {
                     imm = -*imm;  // the immediate should be subtracted for sub
                     if (S == 0) {
-                        kind[parseLevel++] = sf ? "SUB (immediate) — 64-bit" : "SUB (immediate) — 32-bit";
+                        kind[parseLevel++] = sf ? "SUB (immediate) - 64-bit" : "SUB (immediate) - 32-bit";
                     } else {
                         if (Rd == RZR) {
                             // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/cmp-immediate-compare-immediate-an-alias-of-subs-immediate
                             kind[parseLevel++] = "CMP (immediate)";  // preferred alias
                             Rd = -1;
                         } else {
-                            kind[parseLevel++] = sf ? "SUBS (immediate) — 64-bit" : "SUBS (immediate) — 32-bit";
+                            kind[parseLevel++] = sf ? "SUBS (immediate) - 64-bit" : "SUBS (immediate) - 32-bit";
                         }
                     }
                 }
@@ -596,11 +596,11 @@ Instruction::Instruction(const int32_t* inst) {
                     kind[parseLevel++] = unalloc;
                 } else if (opc == 0) {
                     if (Rn == RZR) result = 0;
-                    kind[parseLevel++] = sf ? "AND (immediate) — 64-bit" : "AND (immediate) — 32-bit";
+                    kind[parseLevel++] = sf ? "AND (immediate) - 64-bit" : "AND (immediate) - 32-bit";
                 } else if (opc == 0b1) {
                     if (Rn == RZR) {
                         // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/mov-bitmask-immediate-move-bitmask-immediate-an-alias-of-orr-immediate
-                        kind[parseLevel++] = sf ? "MOV (bitmask immediate) — 64-bit" : "MOV (bitmask immediate) — 32-bit";
+                        kind[parseLevel++] = sf ? "MOV (bitmask immediate) - 64-bit" : "MOV (bitmask immediate) - 32-bit";
                         if (imm) {
                             result = *imm;
                             if (HighestSetBit(result, sizeof(result)*CHAR_BIT) < 16) {
@@ -608,19 +608,19 @@ Instruction::Instruction(const int32_t* inst) {
                             }
                         }
                     } else {
-                        kind[parseLevel++] = sf ? "ORR (immediate) — 64-bit" : "ORR (immediate) — 32-bit";
+                        kind[parseLevel++] = sf ? "ORR (immediate) - 64-bit" : "ORR (immediate) - 32-bit";
                     }
                 } else if (opc == 0b10) {
                     if (imm && (Rn == RZR)) result = *imm;
-                    kind[parseLevel++] = sf ? "EOR (immediate) — 64-bit" : "EOR (immediate) — 32-bit";
+                    kind[parseLevel++] = sf ? "EOR (immediate) - 64-bit" : "EOR (immediate) - 32-bit";
                 } else {  // opc == 0b11
                     if (Rn == RZR) result = 0;
                     if (Rd == RZR) {
                         // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/tst-immediate-test-bits-immediate-an-alias-of-ands-immediate
-                        kind[parseLevel++] = sf ? "TST (immediate) — 64-bit" : "TST (immediate) — 32-bit";  // preferred alias
+                        kind[parseLevel++] = sf ? "TST (immediate) - 64-bit" : "TST (immediate) - 32-bit";  // preferred alias
                         Rd = -1;
                     } else {
-                        kind[parseLevel++] = sf ? "ANDS (immediate) — 64-bit" : "ANDS (immediate) — 32-bit";
+                        kind[parseLevel++] = sf ? "ANDS (immediate) - 64-bit" : "ANDS (immediate) - 32-bit";
                     }
                 }
             } else {
@@ -639,57 +639,57 @@ Instruction::Instruction(const int32_t* inst) {
                     // In both cases the Rd bits below the bitfield are set to zero, and the bits above are sign extended.
                     // TODO https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/sbfm-signed-bitfield-move#commonps
 
-                    // kind[parseLevel++] = sf ? "SBFM — 64-bit" : "SBFM — 32-bit";
+                    // kind[parseLevel++] = sf ? "SBFM - 64-bit" : "SBFM - 32-bit";
                     // SBFM exclusively goes by aliases
                     // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/sbfm-signed-bitfield-move#aliasconditions
                     if (imms == (sf ? ONES(6) : ONES(5))) {
-                        kind[parseLevel++] = sf ? "ASR (immediate) — 64-bit" : "ASR (immediate) — 32-bit";
+                        kind[parseLevel++] = sf ? "ASR (immediate) - 64-bit" : "ASR (immediate) - 32-bit";
                     } else if (imms < immr) {
-                        kind[parseLevel++] = sf ? "SBFIZ — 64-bit" : "SBFIZ — 32-bit";
+                        kind[parseLevel++] = sf ? "SBFIZ - 64-bit" : "SBFIZ - 32-bit";
                     } else if ((immr == 0) && (imms == ONES(3))) {
-                        kind[parseLevel++] = sf ? "SXTB — 64-bit" : "SXTB — 32-bit";
+                        kind[parseLevel++] = sf ? "SXTB - 64-bit" : "SXTB - 32-bit";
                     } else if ((immr == 0) && (imms == ONES(4))) {
-                        kind[parseLevel++] = sf ? "SXTH — 64-bit" : "SXTH — 32-bit";
+                        kind[parseLevel++] = sf ? "SXTH - 64-bit" : "SXTH - 32-bit";
                     } else if (sf && (immr == 0) && (imms == ONES(5))) {
                         kind[parseLevel++] = "SXTW";  // only 64-bit
                     } else {
-                        kind[parseLevel++] = sf ? "SBFX — 64-bit" : "SBFX — 32-bit";
+                        kind[parseLevel++] = sf ? "SBFX - 64-bit" : "SBFX - 32-bit";
                     }
                 } else if (opc == 0b1) {
                     // In both cases the other bits of Rd remain unchanged.
                     // TODO https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/bfm-bitfield-move#commonps
 
-                    // kind[parseLevel++] = sf ? "BFM — 64-bit" : "BFM — 32-bit";
+                    // kind[parseLevel++] = sf ? "BFM - 64-bit" : "BFM - 32-bit";
                     // BFM exclusively goes by aliases
                     // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/bfm-bitfield-move#aliasconditions
                     if (imms >= immr) {
-                        kind[parseLevel++] = sf ? "BFXIL — 64-bit" : "BFXIL — 32-bit";
+                        kind[parseLevel++] = sf ? "BFXIL - 64-bit" : "BFXIL - 32-bit";
                     } else if (Rn == RZR) {
-                        kind[parseLevel++] = sf ? "BFC — 64-bit" : "BFC — 32-bit";
+                        kind[parseLevel++] = sf ? "BFC - 64-bit" : "BFC - 32-bit";
                         numSourceRegisters = 0;
                     } else {
-                        kind[parseLevel++] = sf ? "BFI — 64-bit" : "BFI — 32-bit";
+                        kind[parseLevel++] = sf ? "BFI - 64-bit" : "BFI - 32-bit";
                     }
                 } else {  // opc == 0b10
                     assert(opc == 0b10);
                     // In both cases the Rd bits below and above the bitfield are set to zero.
                     // TODO https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/ubfm-unsigned-bitfield-move#commonps
 
-                    // kind[parseLevel++] = sf ? "UBFM — 64-bit" : "UBFM — 32-bit";
+                    // kind[parseLevel++] = sf ? "UBFM - 64-bit" : "UBFM - 32-bit";
                     // UBFM exclusively goes by aliases
                     // https://developer.arm.com/docs/ddi0596/a/a64-base-instructions-alphabetic-order/ubfm-unsigned-bitfield-move#aliasconditions
                     if (imms == (sf ? ONES(6) : ONES(5))) {
-                        kind[parseLevel++] = sf ? "LSR (immediate) — 64-bit" : "LSR (immediate) — 32-bit";
+                        kind[parseLevel++] = sf ? "LSR (immediate) - 64-bit" : "LSR (immediate) - 32-bit";
                     } else if (imms + 1 == immr) {
-                        kind[parseLevel++] = sf ? "LSL (immediate) — 64-bit" : "LSL (immediate) — 32-bit";
+                        kind[parseLevel++] = sf ? "LSL (immediate) - 64-bit" : "LSL (immediate) - 32-bit";
                     } else if (imms < immr) {
-                        kind[parseLevel++] = sf ? "UBFIZ — 64-bit" : "UBFIZ — 32-bit";
+                        kind[parseLevel++] = sf ? "UBFIZ - 64-bit" : "UBFIZ - 32-bit";
                     } else if (!sf && (immr == 0) && (imms == ONES(3))) {
                         kind[parseLevel++] = "UXTB";  // only 32-bit
                     } else if (!sf && (immr == 0) && (imms == ONES(4))) {
                         kind[parseLevel++] = "UXTH";  // only 32-bit
                     } else {
-                        kind[parseLevel++] = sf ? "UBFX — 64-bit" : "UBFX — 32-bit";
+                        kind[parseLevel++] = sf ? "UBFX - 64-bit" : "UBFX - 32-bit";
                     }
                 }
                 Logger::get().debug("sf == N == %i, opc: %i", sf, opc);
@@ -824,9 +824,9 @@ Instruction::Instruction(const int32_t* inst) {
                 auto imm19 = bits(code, 23, 5);
                 // TODO: the only register (Rt) is viewed as 32-bit iff sf == 0
                 if (op == 0) {
-                    kind[parseLevel++] = sf ? "CBZ — 64-bit" : "CBZ — 32-bit";
+                    kind[parseLevel++] = sf ? "CBZ - 64-bit" : "CBZ - 32-bit";
                 } else {
-                    kind[parseLevel++] = sf ? "CBNZ — 64-bit" : "CBNZ — 32-bit";
+                    kind[parseLevel++] = sf ? "CBNZ - 64-bit" : "CBNZ - 32-bit";
                 }
                 label = (decltype(label)::value_type)(SignExtend<int64_t>(imm19, 19) << 2);
             } else {  // op1 == 1xxxxxxxxxxxxx
@@ -918,30 +918,30 @@ Instruction::Instruction(const int32_t* inst) {
                             Rs[0] = Rt; Rs0CanBeSP = false;
                             Rd = Rn; RdCanBeSP = true;
                             if (size == 3) {
-                                kind[parseLevel++] = "STR (register) — 64-bit";
+                                kind[parseLevel++] = "STR (register) - 64-bit";
                             } else if (size == 2) {
-                                kind[parseLevel++] = "STR (register) — 32-bit";
+                                kind[parseLevel++] = "STR (register) - 32-bit";
                             } else if (size == 1) {
                                 kind[parseLevel++] = "STRH (register)";
                             } else if (shifted) {
-                                kind[parseLevel++] = "STRB (register) — shifted register";
+                                kind[parseLevel++] = "STRB (register) - shifted register";
                             } else {
-                                kind[parseLevel++] = "STRB (register) — extended register";
+                                kind[parseLevel++] = "STRB (register) - extended register";
                             }
                         } else {
                             Rs[0] = Rn; Rs0CanBeSP = true;
                             Rd = Rt; RdCanBeSP = false;
                             if (opc == 0b1) {
                                 if (size == 3) {
-                                    kind[parseLevel++] = "LDR (register) — 64-bit";
+                                    kind[parseLevel++] = "LDR (register) - 64-bit";
                                 } else if (size == 2) {
-                                    kind[parseLevel++] = "LDR (register) — 32-bit";
+                                    kind[parseLevel++] = "LDR (register) - 32-bit";
                                 } else if (size == 1) {
                                     kind[parseLevel++] = "LDRH (register)";
                                 } else if (shifted) {
-                                    kind[parseLevel++] = "LDRB (register) — shifted register";
+                                    kind[parseLevel++] = "LDRB (register) - shifted register";
                                 } else {
-                                    kind[parseLevel++] = "LDRB (register) — extended register";
+                                    kind[parseLevel++] = "LDRB (register) - extended register";
                                 }
                             } else {  // opc == 10 or 11
                                 bool opc64 = (opc == 0b10);
@@ -950,20 +950,20 @@ Instruction::Instruction(const int32_t* inst) {
                                 } else if (size == 2) {
                                     kind[parseLevel++] = opc64 ? "LDRSW (register)" : unalloc;
                                 } else if (size == 1) {
-                                    kind[parseLevel++] = opc64 ? "LDRSH (register) — 64-bit" : "LDRSH (register) — 32-bit";
+                                    kind[parseLevel++] = opc64 ? "LDRSH (register) - 64-bit" : "LDRSH (register) - 32-bit";
                                 } else {
                                     // TODO: Rt is a 32-bit view iff opc == 0b11;
                                     if (opc64) {
                                         if (shifted) {
-                                            kind[parseLevel++] = "LDRSB (register) — 64-bit with shifted register offset";
+                                            kind[parseLevel++] = "LDRSB (register) - 64-bit with shifted register offset";
                                         } else {
-                                            kind[parseLevel++] = "LDRSB (register) — 64-bit with extended register offset";
+                                            kind[parseLevel++] = "LDRSB (register) - 64-bit with extended register offset";
                                         }
                                     } else {
                                         if (shifted) {
-                                            kind[parseLevel++] = "LDRSB (register) — 32-bit with shifted register offset";
+                                            kind[parseLevel++] = "LDRSB (register) - 32-bit with shifted register offset";
                                         } else {
-                                            kind[parseLevel++] = "LDRSB (register) — 32-bit with extended register offset";
+                                            kind[parseLevel++] = "LDRSB (register) - 32-bit with extended register offset";
                                         }
                                     }
                                 }
@@ -985,9 +985,9 @@ Instruction::Instruction(const int32_t* inst) {
                         Rs[0] = Rt; Rs0CanBeSP = false;
                         Rd = Rn; RdCanBeSP = true;
                         if (size == 3) {
-                            kind[parseLevel++] = "STR (immediate) — 64-bit";
+                            kind[parseLevel++] = "STR (immediate) - 64-bit";
                         } else if (size == 2) {
-                            kind[parseLevel++] = "STR (immediate) — 32-bit";
+                            kind[parseLevel++] = "STR (immediate) - 32-bit";
                         } else if (size == 1) {
                             kind[parseLevel++] = "STRH (immediate)";
                         } else {
@@ -998,9 +998,9 @@ Instruction::Instruction(const int32_t* inst) {
                         Rd = Rt; RdCanBeSP = false;
                         if (opc == 0b1) {
                             if (size == 3) {
-                                kind[parseLevel++] = "LDR (immediate) — 64-bit";
+                                kind[parseLevel++] = "LDR (immediate) - 64-bit";
                             } else if (size == 2) {
-                                kind[parseLevel++] = "LDR (immediate) — 32-bit";
+                                kind[parseLevel++] = "LDR (immediate) - 32-bit";
                             } else if (size == 1) {
                                 kind[parseLevel++] = "LDRH (immediate)";
                             } else {
@@ -1013,9 +1013,9 @@ Instruction::Instruction(const int32_t* inst) {
                             } else if (size == 2) {
                                 kind[parseLevel++] = opc64 ? "LDRSW (immediate)" : unalloc;
                             } else if (size == 1) {
-                                kind[parseLevel++] = opc64 ? "LDRSH (immediate) — 64-bit" : "LDRSH (immediate) — 32-bit";
+                                kind[parseLevel++] = opc64 ? "LDRSH (immediate) - 64-bit" : "LDRSH (immediate) - 32-bit";
                             } else {
-                                kind[parseLevel++] = opc64 ? "LDRSB (immediate) — 64-bit" : "LDRSB (immediate) — 32-bit";
+                                kind[parseLevel++] = opc64 ? "LDRSB (immediate) - 64-bit" : "LDRSB (immediate) - 32-bit";
                             }
                         }
                     }
@@ -1066,11 +1066,11 @@ Instruction::Instruction(const int32_t* inst) {
                     Rs[1] = Rt2;
                     Rd = Rn; RdCanBeSP = true;
                     if (opc == 0) {
-                        kind[parseLevel++] = "STP — 32-bit";
+                        kind[parseLevel++] = "STP - 32-bit";
                     } else if (opc == 0b1) {
                         kind[parseLevel++] = "STGP";
                     } else {  // 10
-                        kind[parseLevel++] = "STP — 64-bit";
+                        kind[parseLevel++] = "STP - 64-bit";
                     }
                 } else if (!V && L) {
                     numSourceRegisters = 1;
@@ -1078,11 +1078,11 @@ Instruction::Instruction(const int32_t* inst) {
                     Rd = Rt; RdCanBeSP = false;
                     Rd2 = Rt2;
                     if (opc == 0) {
-                        kind[parseLevel++] = "LDP — 32-bit";
+                        kind[parseLevel++] = "LDP - 32-bit";
                     } else if (opc == 0b1) {
                         kind[parseLevel++] = "LDPSW";
                     } else {  // 10
-                        kind[parseLevel++] = "LDP — 64-bit";
+                        kind[parseLevel++] = "LDP - 64-bit";
                     }
                 } else {
                     Logger::get().debug("TODO: SIMD&FP LDP/STP. opc: %i, V: %i, L: %i", opc, V, L);

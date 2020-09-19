@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include "../utils/utils-functions.h"
 #include "rapidjson-utils.hpp"
-#include "../../include/modloader.hpp"
+#include "../../beatsaber-hook/include/modloader.hpp"
 #include <string>
 
 // typedef rapidjson::GenericDocument<rapidjson::UTF8<>, rapidjson::CrtAllocator> ConfigDocument;

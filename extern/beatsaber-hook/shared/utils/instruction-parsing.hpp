@@ -139,7 +139,7 @@ public:
         usleep(10000);
         return nullptr;
     }
-    // e.g. BL, BLR. Unless the jump in indirect, the address the instruction jumps to will be at ->imm.
+    // e.g. BL, BLR. Unless the jump is indirect, the address which the instruction jumps to will be at ->imm.
     Instruction* findNthCall(int n, int rets = 0);
     // e.g. B, B.eq, B.ne
     Instruction* findNthDirectBranchWithoutLink(int n, int rets = 0);

@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Codegen.hpp"
 
 #include <unordered_set>
+#include <map>
 
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-utils.hpp"  
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"  
-#include "../extern/BeatSaberQuestCustomUI-master/shared/customui.hpp"
+#include "../extern/BeatSaberQuestCustomUI/shared/customui.hpp"
 #include "../extern/beatsaber-hook/shared/utils/utils.h"  
 #include "../extern/beatsaber-hook/shared/config/rapidjson-utils.hpp"
 #include "../extern/beatsaber-hook/shared/config/config-utils.hpp"
@@ -13,6 +15,7 @@
 
 using namespace il2cpp_utils;
 using namespace CustomUI;
+using namespace GlobalNamespace;
 
 static ModInfo modInfo;
 
@@ -29,6 +32,7 @@ static struct Config_t {
     bool WallsLeft = true;
     bool playCount = true;
     bool useLegacyAcc = false;
+    bool PPCounter = true;
 } Config;
 
 
@@ -251,3 +255,23 @@ class CustomButton {
 extern CustomButton SwitchButton;
 
 extern CustomButton ToggleButton;
+
+class PPDownloader
+{
+	private:
+	const std::string URI_PREFIX;
+	const std::string FILE_NAME;
+
+	Il2CppObject* WebRequestAPI;
+	Il2CppObject* DownloadHandler;
+	Il2CppObject* WebRequestAsyncOp;
+	Il2CppString* JsonStr;
+ 
+	public:
+
+	void PPDownloader_CompletedWebRequest();
+
+	void PPDownloader_WebRequest();
+};
+
+static PPDownloader PPDownloader_instance = PPDownloader();

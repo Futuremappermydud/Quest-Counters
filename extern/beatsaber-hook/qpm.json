@@ -1,0 +1,28 @@
+{
+  "sharedDir": "shared",
+  "dependenciesDir": "extern",
+  "info": {
+    "name": "beatsaber-hook",
+    "id": "beatsaber-hook",
+    "version": "0.6.0",
+    "url": "https://github.com/sc2ad/beatsaber-hook",
+    "additionalData": {
+      "branchName": "version-v0.6.0",
+      "soLink": "https://github.com/sc2ad/beatsaber-hook/releases/download/v0.6.0/libbeatsaber-hook_0_6_0.so.so",
+      "debugSoLink": "https://github.com/sc2ad/beatsaber-hook/releases/download/v0.6.0/debug_libbeatsaber-hook_0_6_0.so"
+    }
+  },
+  "dependencies": [
+    {
+      "id": "modloader",
+      "versionRange": "^1.0.0",
+      "additionalData": {}
+    },
+    {
+      "id": "libil2cpp",
+      "versionRange": "0.1.2",
+      "additionalData": {}
+    }
+  ],
+  "additionalData": {}
+}

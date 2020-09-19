@@ -267,10 +267,14 @@ typedef struct DelegateData : Il2CppObject {
 } DelegateData;
 #endif
 
+#include "il2cpp-utils.hpp"
+
 #ifdef HAS_CODEGEN
-#include "System/Collections/Generic/IEnumerable_1.hpp"
+#include "System/Collections/Generic/IReadOnlyList_1.hpp"
+#include "System/Collections/Generic/IList_1.hpp"
 template<class T>
-struct Array : public Il2CppArray, public System::Collections::Generic::IEnumerable_1<T>
+struct Array : public Il2CppArray, public System::Collections::Generic::IReadOnlyList_1<T>,
+  public System::Collections::Generic::IList_1<T>
 #else
 template<class T>
 struct Array : public Il2CppArray
@@ -290,6 +294,49 @@ struct Array : public Il2CppArray
     }
     const T& operator[](size_t i) const {
         return values[i];
+    }
+
+    static Array<T>* New(std::initializer_list<T> vals) {
+        auto* arr = reinterpret_cast<Array<T>*>(il2cpp_functions::array_new(
+            il2cpp_utils::il2cpp_type_check::il2cpp_no_arg_class<T>::get(), vals.size()));
+        memcpy(arr->values, vals.begin(), sizeof(T)*vals.size());
+        return arr;
+    }
+
+    template<typename... TArgs>
+    static Array<T>* New(TArgs&&... args) {
+        return New({args...});
+    }
+
+  #ifdef HAS_CODEGEN
+    System::Collections::Generic::IEnumerator_1<T>* GetEnumerator() {
+  #else
+    Il2CppObject* GetEnumerator() {
+  #endif
+        static auto* method = CRASH_UNLESS(il2cpp_utils::FindMethodUnsafe(
+            this, "System.Collections.Generic.IEnumerable`1.GetEnumerator", 0));
+      #ifdef HAS_CODEGEN
+        return CRASH_UNLESS(il2cpp_utils::RunMethod<System::Collections::Generic::IEnumerator_1<T>*>(
+      #else
+        return CRASH_UNLESS(il2cpp_utils::RunMethod(
+      #endif
+            this, method));
+    }
+
+    bool Contains(T item) {
+        // TODO: find a better way around the existence of 2 methods with this name (the 2nd not being generic at all)
+        static auto* method = CRASH_UNLESS(il2cpp_utils::FindMethodUnsafe(
+            this, "System.Collections.Generic.ICollection`1.Contains", 1));
+        return CRASH_UNLESS(il2cpp_utils::RunMethod<bool>(this, method, item));
+    }
+    void CopyTo(::Array<T>* array, int arrayIndex) {
+        static auto* method = CRASH_UNLESS(il2cpp_utils::FindMethodUnsafe(
+            this, "System.Collections.Generic.ICollection`1.CopyTo", 2));
+        return CRASH_UNLESS(il2cpp_utils::RunMethod(this, method, array, arrayIndex));
+    }
+    int IndexOf(T item) {
+        static auto* method = CRASH_UNLESS(il2cpp_utils::FindMethodUnsafe(this, "System.Collections.Generic.IList`1.IndexOf", 1));
+        return CRASH_UNLESS(il2cpp_utils::RunMethod<int>(this, method, item));
     }
 };
 
@@ -485,8 +532,41 @@ typedef System::Threading::InternalThread Il2CppInternalThread;
 // self-typedef'd in il2cpp-api-types.h
 struct Il2CppThread : public System::Threading::Thread {};
 
-
+#else
+// From Runtime.cpp (some may need the * removed):
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppMulticastDelegate*, multicastdelegate);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppAsyncCall*, async_call);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppInternalThread*, internal_thread);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionEvent*, event_info);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppStringBuilder*, stringbuilder);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppStackFrame*, stack_frame);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionAssemblyName*, assembly_name);
+// DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionAssembly*, assembly);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionAssembly*, mono_assembly);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionField*, mono_field);
+// DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionParameter*, parameter_info);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionParameter*, mono_parameter_info);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionModule*, module);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionPointer*, pointer);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppSystemException*, system_exception);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppArgumentException*, argument_exception);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppMarshalByRefObject*, marshalbyrefobject);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppSafeHandle*, safe_handle);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppSortKey*, sort_key);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppErrorWrapper*, error_wrapper);
+// TODO: attempt to move out of this conditional if codegen ever gets an Il2CppComObject?
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppComObject*, il2cpp_com_object);
 #endif
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppDelegate*, delegate);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionMonoType*, monotype);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppThread*, thread);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionRuntimeType*, runtimetype);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionMonoEventInfo*, mono_event_info);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppTypedRef*, typed_reference);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppReflectionMethod*, mono_method);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppMethodInfo*, mono_method_info);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppPropertyInfo*, mono_property_info);
+DEFINE_IL2CPP_DEFAULT_TYPE(Il2CppException*, exception);
 
 #include "utils/Il2CppHashMap.h"
 #include "utils/HashUtils.h"

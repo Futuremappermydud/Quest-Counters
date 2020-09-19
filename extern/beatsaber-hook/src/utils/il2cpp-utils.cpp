@@ -171,7 +171,7 @@ namespace il2cpp_utils {
             typeMap[il2cpp_functions::defaults->string_class] = "string";
             typeMap[il2cpp_functions::defaults->void_class] = "void";
         }
-        auto p = typeMap.find(il2cpp_functions::class_from_type(type));
+        auto p = typeMap.find(il2cpp_functions::class_from_il2cpp_type(type));
         if (p != typeMap.end()) {
             return p->second;
         } else {
@@ -216,14 +216,35 @@ namespace il2cpp_utils {
         return FindMethodUnsafe(klass, methodName, argsCount);
     }
 
-    const MethodInfo* FindMethod(Il2CppClass* klass, std::string_view methodName, std::vector<Il2CppClass*> genTypes,
-            std::vector<const Il2CppType*> argTypes) {
+    std::vector<Il2CppClass*> ClassesFrom(std::vector<Il2CppClass*> classes) { return classes; }
+    std::vector<Il2CppClass*> ClassesFrom(std::vector<std::string_view> strings) {
+        std::vector<Il2CppClass*> classes;
+        for (size_t i = 0; i < strings.size() - 1; i += 2) {
+            classes.push_back(GetClassFromName(strings[i].data(), strings[i+1].data()));
+        }
+        return classes;
+    }
+    std::vector<const Il2CppType*> TypesFrom(std::vector<const Il2CppType*> types) { return types; }
+    std::vector<const Il2CppType*> TypesFrom(std::vector<const Il2CppClass*> classes) { return ClassVecToTypes(classes); }
+    std::vector<const Il2CppType*> TypesFrom(std::vector<std::string_view> strings) {
+        std::vector<const Il2CppType*> types;
+        for (size_t i = 0; i < strings.size() - 1; i += 2) {
+            auto clazz = GetClassFromName(strings[i].data(), strings[i+1].data());
+            types.push_back(il2cpp_functions::class_get_type(clazz));
+        }
+        return types;
+    }
+
+    // Returns the MethodInfo for the method on the given class with the given name and types of arguments
+    // Created by zoller27osu
+    const MethodInfo* FindMethod(FindMethodInfo& info) {
         il2cpp_functions::Init();
+        auto* klass = info.klass;
         RET_0_UNLESS(klass);
 
-        // TODO: fix for generics
+        // TODO: make cache work for generics (stratify by generics count?) and differing return types?
         // Check Cache
-        auto innerPair = classesNamesTypesInnerPairType(methodName, argTypes);
+        auto innerPair = classesNamesTypesInnerPairType(info.name, info.argTypes);
         auto key = std::pair<Il2CppClass*, classesNamesTypesInnerPairType>(klass, innerPair);
         auto itr = classesNamesTypesToMethodsCache.find(key);
         if (itr != classesNamesTypesToMethodsCache.end()) {
@@ -231,28 +252,56 @@ namespace il2cpp_utils {
         }
 
         void* myIter = nullptr;
-        const MethodInfo* methodInfo = nullptr;
-        bool multipleMatches = false;
+        const MethodInfo* methodInfo = nullptr;  // basic match
+        bool multipleBasicMatches = false;
+        const MethodInfo* returnMatch = nullptr;
+        bool multipleReturnMatches = false;
+        const MethodInfo* perfectMatch = nullptr;
+        bool multiplePerfectMatches = false;
         // Does NOT automatically recurse through klass's parents
-        while (const MethodInfo* current = il2cpp_functions::class_get_methods(klass, &myIter)) {
-            if ((methodName == current->name) && ParameterMatch(current, genTypes, argTypes)) {
-                if (methodInfo) {
-                    multipleMatches = true;
-                    break;
+        while (const MethodInfo* current = il2cpp_functions::class_get_methods(info.klass, &myIter)) {
+            if ((info.name == current->name) && ParameterMatch(current, info.genTypes, info.argTypes)) {
+                il2cpp_utils::LogMethod(current);
+                if (info.returnType) {
+                    auto* returnClass = il2cpp_functions::class_from_il2cpp_type(current->return_type);
+                    if (info.returnType == returnClass) {
+                        if (perfectMatch) {
+                            multiplePerfectMatches = true;
+                            Logger::get().error("Multiple perfect matches???");
+                        }
+                        else perfectMatch = current;
+                    }
+                    if (il2cpp_functions::class_is_assignable_from(info.returnType, returnClass)) {
+                        if (returnMatch) {
+                            Logger::get().debug("Multiple return type matches.");
+                            multipleReturnMatches = true;
+                        }
+                        else returnMatch = current;
+                    }
                 }
-                methodInfo = current;
+                if (methodInfo)
+                    multipleBasicMatches = true;
+                else
+                    methodInfo = current;
             }
         }
         if (!methodInfo && klass->parent && klass->parent != klass) {
-            methodInfo = FindMethod(klass->parent, methodName, {}, argTypes);
+            info.klass = klass->parent;
+            methodInfo = FindMethod(info);
+            info.klass = klass;
         }
 
-        if (!methodInfo || multipleMatches) {
+        if (!multiplePerfectMatches && perfectMatch) {
+            // It's important that these kinds of matches aren't added to the general cache
+            return perfectMatch;
+        } else if (!multipleReturnMatches && returnMatch) {
+            return returnMatch;
+        } else if (!methodInfo || multipleBasicMatches) {
             std::stringstream ss;
-            ss << ((multipleMatches) ? "found multiple matches for" : "could not find");
-            ss << " method " << methodName << "(";
+            ss << ((multipleBasicMatches) ? "found multiple matches for" : "could not find");
+            ss << " method " << info.name << "(";
             bool first = true;
-            for (auto t : argTypes) {
+            for (auto t : info.argTypes) {
                 if (!first) ss << ", ";
                 first = false;
                 ss << TypeGetSimpleName(t);
@@ -260,26 +309,10 @@ namespace il2cpp_utils {
             ss << ") in class '" << ClassStandardName(klass) << "'!";
             Logger::get().error("%s", ss.str().c_str());
             LogMethods(klass);
-            if (multipleMatches) methodInfo = nullptr;
+            return nullptr;
         }
         classesNamesTypesToMethodsCache.emplace(key, methodInfo);
         return methodInfo;
-    }
-
-    const MethodInfo* FindMethod(Il2CppClass* klass, std::string_view methodName, std::vector<Il2CppClass*> genTypes,
-            std::vector<const Il2CppClass*> classFromes) {
-        std::vector<const Il2CppType*> argTypes = ClassVecToTypes(classFromes);
-        return FindMethod(klass, methodName, genTypes, argTypes);
-    }
-
-    const MethodInfo* FindMethod(Il2CppClass* klass, std::string_view methodName, std::vector<Il2CppClass*> genTypes,
-            std::vector<std::string_view> argSpaceClass) {
-        std::vector<const Il2CppType*> argTypes;
-        for (size_t i = 0; i < argSpaceClass.size() - 1; i += 2) {
-            auto clazz = GetClassFromName(argSpaceClass[i].data(), argSpaceClass[i+1].data());
-            argTypes.push_back(il2cpp_functions::class_get_type(clazz));
-        }
-        return FindMethod(klass, methodName, genTypes, argTypes);
     }
 
     FieldInfo* FindField(Il2CppClass* klass, std::string_view fieldName) {
