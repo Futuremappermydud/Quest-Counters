@@ -36,5 +36,5 @@ float GetPP(SongID songID)
 
 bool IsRanked(SongID songID)
 {
-    return data.contains(songID.id);
+    return data.contains(songID.id) && GetPP(songID) > 0;
 }
