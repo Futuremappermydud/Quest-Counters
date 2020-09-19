@@ -32,8 +32,9 @@ void PP_Start(Il2CppObject *self) {
 
 
 void PP_Update(float Percentage) {
-  if (PPTextObject.gameObj == nullptr || Percentage == 0.0f) {
+  if (PPTextObject.gameObj == nullptr) {
     return;
   }
+	getLogger().debug(songID.id + " " + std::to_string(songID.difficulty.value));
 	PPTextObject.set(std::to_string(CalculatePP(songID, Percentage)) + "pp");
 }

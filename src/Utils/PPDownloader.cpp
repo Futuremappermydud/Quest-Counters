@@ -60,6 +60,7 @@ void PPDownloader_CompletedWebRequest()
 		PPData.insert({itr->name.GetString(), data});
 	}
 	getLogger().debug(std::to_string(PPData.size()));	
+	PPData_Init(PPData);
 }
 void PPDownloader_WebRequest() 
 {

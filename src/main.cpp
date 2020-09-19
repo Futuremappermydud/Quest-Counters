@@ -104,7 +104,9 @@ MAKE_HOOK_OFFSETLESS(RawScore, void, Il2CppObject* noteCutInfo, int* beforeCutRa
 }
 
 MAKE_HOOK_OFFSETLESS(SongStart, void, Il2CppObject* self, IDifficultyBeatmap* difficultyBeatmap, Il2CppObject* overrideEnvironmentSettings, Il2CppObject* overrideColorScheme, GameplayModifiers* gameplayModifiers, Il2CppObject* playerSpecificSettings, Il2CppObject* practiceSettings, Il2CppString* backButtonText, bool useTestNoteCutSoundEffects) {
-    PP_Init(difficultyBeatmap, to_utf8(csstrtostr(difficultyBeatmap->get_level()->get_levelID())), gameplayModifiers);
+    auto levelID = GetHash(to_utf8(csstrtostr(difficultyBeatmap->get_level()->get_levelID())));
+    
+    PP_Init(difficultyBeatmap, levelID, gameplayModifiers);
     
     ToggleButton.destroy();
     SwitchButton.destroy();
