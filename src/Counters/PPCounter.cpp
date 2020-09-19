@@ -11,7 +11,7 @@ void PP_Start(Il2CppObject *self) {
 
   PPTextObject.parentTransform = ScoreTextParentTransform;
   
-  PPTextObject.text = "0.00pp";
+  PPTextObject.text = ;
 
   PPTextObject.sizeDelta = {-140, 230};
   PPTextObject.fontSize = 12.0F;
@@ -24,5 +24,4 @@ void PP_Update() {
   if (PPTextObject.gameObj == nullptr || currentScore == 0) {
     return;
   }
-  
 }
