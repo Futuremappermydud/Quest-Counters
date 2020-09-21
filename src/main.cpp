@@ -206,7 +206,7 @@ MAKE_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, void, Il2CppOb
     RelativeScoreAndImmediateRankCounter_Update(self, score, modifiedScore, maxPossibleScore, maxPossibleModifiedScore);
     float num = (float)score / (float)maxPossibleScore;
     PB_Update(num * 100.0f);
-    PP_Update(num * 100.0f);
+    PP_Update(num);
 }
 
 MAKE_HOOK_OFFSETLESS(StartConfigUI, void, Il2CppObject* self)
