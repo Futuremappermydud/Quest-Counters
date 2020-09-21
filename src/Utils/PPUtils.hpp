@@ -49,7 +49,7 @@ static GameplayModifiers* RemoveNoFail(GameplayModifiers* modifiers)
 }
 
 
-void PPData_Init(std::map<std::string, RawPPData> PPData);
+void PPData_Init(std::map<std::string, RawPPData>& PPData)
 
 float GetPP(SongID songID);
 

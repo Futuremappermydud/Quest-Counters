@@ -1,9 +1,9 @@
 #include "PPUtils.hpp"
 
-std::map<std::string, RawPPData> data;
+std::map<std::string, RawPPData>& data;
 bool Init = false;
 
-void PPData_Init(std::map<std::string, RawPPData> PPData)
+void PPData_Init(std::map<std::string, RawPPData>& PPData)
 {
     getLogger().debug("Initializing PPData");
 	data = PPData;
@@ -17,9 +17,9 @@ float GetPP(SongID songID)
     if (itr == data.end()) {
         getLogger().debug("%s does not exist in data!", songID.id.c_str());
     }
-    //for (auto& item : data) {
-    //    getLogger().debug("item exists! key: %s value: %f", item.first.c_str(), item.second._Easy_SoloStandard);
-    //}
+    for (auto& item : data) {
+        getLogger().debug("item exists! key: %s value: %f", item.first.c_str(), item.second._Easy_SoloStandard);
+    }
 
     getLogger().debug(songID.id + " " + std::to_string(data.at(songID.id)._Easy_SoloStandard));
     getLogger().debug(songID.id + " " + std::to_string(data.at(songID.id)._Normal_SoloStandard));
