@@ -39,17 +39,9 @@ void PP_Start(Il2CppObject *self) {
 		PPTextObject.text = "Song Not Ranked!";
 		Ranked = false;
 	}
-	PPTextObject.sizeDelta = {-100, -60};
-	PPTextObject.fontSize = 12.0F;
+	PPTextObject.sizeDelta = {-300, -120};
+	PPTextObject.fontSize = 4.0F;
 	PPTextObject.create();
-}
-
-std::string Round (float val, int precision = 2)
-{
-	std::stringstream stream;
-    stream << std::fixed << std::setprecision(precision) << val;
-    std::string Out = stream.str();
-	return Out;
 }
 
 void PP_Update(float Percentage) {
@@ -57,7 +49,11 @@ void PP_Update(float Percentage) {
 		return;
 	}
 	getLogger().debug("Percentage %f", Percentage);
-	float acc = Percentage;
+	float acc = Percentage * _multiplier;
 
-	PPTextObject.set(Round(CalculatePP(songID, acc)) + "pp");
+	float pp = CalculatePP(songID, acc);
+
+	Stats_PP = pp;
+
+	PPTextObject.set(Round(pp) + "pp");
 }

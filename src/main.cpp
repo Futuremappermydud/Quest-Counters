@@ -218,10 +218,17 @@ MAKE_HOOK_OFFSETLESS(StartConfigUI, void, Il2CppObject* self)
     StartConfigUI(self);
     SettingsUI_Start(self);
 }
+
 MAKE_HOOK_OFFSETLESS(ScoreController_Start, void, ScoreController* self)
 {
     ScoreController_Start(self);
     modifiersModel = self->gameplayModifiersModel;
+}
+
+MAKE_HOOK_OFFSETLESS(ResultsViewController_SetDataToUI, void, ResultsViewController* self)
+{
+    ResultsViewController_SetDataToUI(self);
+    Stats_Start(self);
 }
 
 extern "C" void setup(ModInfo& info) {
@@ -255,4 +262,5 @@ extern "C" void load() {
     INSTALL_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, FindMethodUnsafe("", "RelativeScoreAndImmediateRankCounter", "UpdateRelativeScoreAndImmediateRank", 4));
     INSTALL_HOOK_OFFSETLESS(StartConfigUI, FindMethodUnsafe("", "PauseMenuManager", "Start", 0));
     INSTALL_HOOK_OFFSETLESS(ScoreController_Start, FindMethodUnsafe("", "ScoreController", "Start", 0));
+    INSTALL_HOOK_OFFSETLESS(ResultsViewController_SetDataToUI, FindMethodUnsafe("", "ResultsViewController", "SetDataToUI", 0));
 }

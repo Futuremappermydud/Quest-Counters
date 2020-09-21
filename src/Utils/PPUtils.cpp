@@ -2,7 +2,7 @@
 
 std::map<std::string, RawPPData> ppData;
 
-const uint CURVE_SIZE = 16;
+const int CURVE_SIZE = 16;
 
 float ppCurve[CURVE_SIZE][2] = {
     {0, 0},
@@ -34,7 +34,7 @@ float slopes[15];
 void InitializePPUtils()
 {
     getLogger().debug("Initializing PPUtils");
-    for (auto i = 0; i < sizeof(ppCurve) - 1; i++)
+    for (auto i = 0; i < CURVE_SIZE - 1; i++)
     {
         auto x1 = ppCurve[i][0];
         auto y1 = ppCurve[i][1];
@@ -43,6 +43,8 @@ void InitializePPUtils()
 
         auto m = (y2 - y1) / (x2 - x1);
         slopes[i] = m;
+        getLogger().debug("Initializing PPUtils X1: " + std::to_string(x1));
+        getLogger().debug("Initializing PPUtils Y1: " + std::to_string(y1));
     }
 }
 
@@ -54,6 +56,7 @@ bool AllowedPositiveModifiers(SongID songID)
 float Lerp(float x1, float y1, float x2, float y2, float x3, int i)
 {
     float m = slopes[i];
+    getLogger().debug("Lerp Result: %f", (m * (x3 - x1) + y1));
     return m * (x3 - x1) + y1;
 }
 
@@ -69,10 +72,14 @@ float PPPercentage(float accuracy)
     for (; i < CURVE_SIZE; i++)
     {
         float curveAcc = ppCurve[i+1][0];
+        getLogger().debug("Curve Acc: %f", curveAcc);
         if (curveAcc > accuracy)
             break;
     }
-
+    getLogger().debug("Lower Score: %f", ppCurve[i][0]);
+    getLogger().debug("Higher Score: %f", ppCurve[i+1][0]);
+    getLogger().debug("Lower Given: %f", ppCurve[i][1]);
+    getLogger().debug("Higher Given: %f", ppCurve[i+1][1]);
     auto lowerScore = ppCurve[i][0];
     auto higherScore = ppCurve[i+1][0];
     auto lowerGiven = ppCurve[i][1];

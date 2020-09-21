@@ -5,3 +5,7 @@
 #include "../extern/BeatSaber-Quest-Codegen/include/GlobalNamespace/IDifficultyBeatmap.hpp"
 #include "../extern/BeatSaber-Quest-Codegen/include/GlobalNamespace/IBeatmapLevel.hpp"
 #include "../extern/BeatSaber-Quest-Codegen/include/GlobalNamespace/ScoreController.hpp"
+#include "../extern/BeatSaber-Quest-Codegen/include/GlobalNamespace/ResultsViewController.hpp"
+#include "../extern/BeatSaber-Quest-Codegen/include/GlobalNamespace/LevelCompletionResults.hpp"
+#include "../extern/BeatSaber-Quest-Codegen/include/TMPro/TextMeshProUGUI.hpp"
+#include "../extern/BeatSaber-Quest-Codegen/include/UnityEngine/Transform.hpp"

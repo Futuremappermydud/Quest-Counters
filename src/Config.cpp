@@ -21,8 +21,6 @@ void SaveConfig() {
 }   
 
 bool LoadConfig() {
-    getConfig().Load();
-    //return false;
     bool foundEverything = true;
     if (getConfig().config.HasMember("Missed Notes Counter") && getConfig().config["Missed Notes Counter"].IsBool()) {
         Config.Missed = getConfig().config["Missed Notes Counter"].GetBool();

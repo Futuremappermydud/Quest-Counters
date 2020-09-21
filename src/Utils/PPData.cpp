@@ -8,6 +8,7 @@ void PPData_Init(std::map<std::string, RawPPData> PPData)
     getLogger().debug("Initializing PPData");
 	data = PPData;
 	Init = true;
+    InitializePPUtils();
 }
 
 std::string str_toupper(std::string s) {

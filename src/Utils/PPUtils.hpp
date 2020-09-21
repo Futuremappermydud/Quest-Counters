@@ -2,32 +2,6 @@
 
 #include "../../include/Main.hpp"
 
-struct SongID
-{
-    std::string id;
-    BeatmapDifficulty difficulty;
-
-    SongID(std::string _id, BeatmapDifficulty _difficulty)
-    {
-        id = _id;
-        difficulty = _difficulty;
-    }
-};
-
-struct RawPPData
-{
-    float _Easy_SoloStandard;
-    float _Normal_SoloStandard;
-    float _Hard_SoloStandard;
-    float _Expert_SoloStandard;
-    float _ExpertPlus_SoloStandard;
-};
-
-
-#include <iostream>
-#include <string>
-#include <vector>
-
 
 
 static GameplayModifiers* RemovePositiveModifiers(GameplayModifiers* modifiers)
