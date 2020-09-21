@@ -40,6 +40,7 @@ Il2CppString* PP_JsonStr;
 
 void PPDownloader_CompletedWebRequest()
 {
+	getLogger().debug("PP DOWNLOADED");
 	PP_DownloadHandler = RET_V_UNLESS(il2cpp_utils::RunMethod(PP_WebRequestAPI, "get_downloadHandler"));
 	PP_JsonStr = RET_V_UNLESS(il2cpp_utils::RunMethod<Il2CppString*>(PP_DownloadHandler, "GetText"));
 	std::string requestCompleteText = to_utf8(csstrtostr(PP_JsonStr));
@@ -64,6 +65,7 @@ void PPDownloader_CompletedWebRequest()
 }
 void PPDownloader_WebRequest() 
 {
+	getLogger().debug("DOWNLOADING PP");
 	Il2CppString *urlPath = il2cpp_utils::createcsstr(URI_PREFIX + FILE_NAME);
 	PP_WebRequestAPI = RET_V_UNLESS(il2cpp_utils::RunMethod("UnityEngine.Networking", "UnityWebRequest", "Get", urlPath));
 	RET_V_UNLESS(il2cpp_utils::RunMethod(PP_WebRequestAPI, "SetRequestHeader", il2cpp_utils::createcsstr("User-Agent"), il2cpp_utils::createcsstr("Quest Counters/PPCounter" + modInfo.version)));

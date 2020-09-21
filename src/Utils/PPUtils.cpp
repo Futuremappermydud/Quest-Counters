@@ -59,13 +59,14 @@ float Lerp(float x1, float y1, float x2, float y2, float x3, int i)
 
 float PPPercentage(float accuracy)
 {
+    getLogger().debug("PPPercentage called!");
     if (accuracy >= 1.14)
         return 1.25f;
     if (accuracy <= 0)
         return 0.0f;
 
     int i = -1;
-    for (; i < sizeof(ppCurve); i++)
+    for (; i < CURVE_SIZE; i++)
     {
         float curveAcc = ppCurve[i+1][0];
         if (curveAcc > accuracy)
@@ -81,11 +82,13 @@ float PPPercentage(float accuracy)
 
 float CalculatePP(float rawPP, float accuracy)
 {
+    getLogger().debug(std::to_string(rawPP) + std::string(" ") + std::to_string(accuracy));
     return rawPP * PPPercentage(accuracy);
 }
 
 float CalculatePP(SongID songID, float accuracy)
 {
+    getLogger().debug(songID.id + std::string(" ") + std::to_string(accuracy));
     auto rawPP = GetPP(songID);
     return CalculatePP(rawPP, accuracy);
 }

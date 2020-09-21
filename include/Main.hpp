@@ -284,10 +284,12 @@ static std::vector<std::string> split(std::string const &str, const char delim)
 
 static std::string GetHash(std::string levelId)
 {
+    getLogger().debug(levelId);
     if (levelId.find("custom_level_"))
     {
         auto splits = split(levelId, '_');
         return splits[2];
     }
+    getLogger().debug(levelId);
     return levelId;
 }
