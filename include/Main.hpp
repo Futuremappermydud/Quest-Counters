@@ -266,7 +266,7 @@ void PP_Init(IDifficultyBeatmap* diff, std::string SongID, GameplayModifiers* Mo
 
 void PP_Start(Il2CppObject *self);
 
-void PP_Update(float relativeScore);
+void PP_Update(float Percentage);
 
 static std::vector<std::string> split(std::string const &str, const char delim)
 {

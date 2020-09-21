@@ -204,12 +204,13 @@ MAKE_HOOK_OFFSETLESS(SpawnObstacle, void, Il2CppObject* self, Il2CppObject* obst
 
 MAKE_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, void, Il2CppObject* self, int score, int modifiedScore, int maxPossibleScore, int maxPossibleModifiedScore)
 {
-    RelativeScoreAndImmediateRankCounter_Update(self, score, modifiedScore, maxPossibleScore, maxPossibleModifiedScore);
+    
     float num = (float)score / (float)maxPossibleScore;
     getLogger().debug(std::to_string(num));
     PB_Update(num * 100.0f);
     float RelativeScore = CRASH_UNLESS(GetPropertyValue<float>(self, "relativeScore"));
-    PP_Update(RelativeScore);
+    PP_Update(num);
+    RelativeScoreAndImmediateRankCounter_Update(self, score, modifiedScore, maxPossibleScore, maxPossibleModifiedScore);
 }
 
 MAKE_HOOK_OFFSETLESS(StartConfigUI, void, Il2CppObject* self)
