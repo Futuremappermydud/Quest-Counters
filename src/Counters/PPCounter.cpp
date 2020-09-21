@@ -56,8 +56,8 @@ void PP_Update(float Percentage) {
 	if (PPTextObject.gameObj == nullptr || !Ranked || modifiersModel == nullptr) {
 		return;
 	}
-	getLogger().debug("Percentage " + std::to_string(Percentage));	
-	float acc = Percentage / 100.0f;
+	getLogger().debug("Percentage %f", Percentage);
+	float acc = Percentage;
 
 	PPTextObject.set(Round(CalculatePP(songID, acc)) + "pp");
 }

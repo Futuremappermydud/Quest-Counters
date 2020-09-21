@@ -206,7 +206,7 @@ MAKE_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, void, Il2CppOb
 {
     
     float num = (float)score / (float)maxPossibleScore;
-    getLogger().debug(std::to_string(num));
+    getLogger().debug("Percentage %f", num);
     PB_Update(num * 100.0f);
     float RelativeScore = CRASH_UNLESS(GetPropertyValue<float>(self, "relativeScore"));
     PP_Update(num);
