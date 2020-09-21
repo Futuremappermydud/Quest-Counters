@@ -23,8 +23,6 @@ struct RawPPData
     float _ExpertPlus_SoloStandard;
 };
 
-extern std::map<std::string, RawPPData> PPData;
-
 
 #include <iostream>
 #include <string>
@@ -49,7 +47,7 @@ static GameplayModifiers* RemoveNoFail(GameplayModifiers* modifiers)
 }
 
 
-void PPData_Init(std::map<std::string, RawPPData>& PPData)
+void PPData_Init(std::map<std::string, RawPPData> PPData);
 
 float GetPP(SongID songID);
 
