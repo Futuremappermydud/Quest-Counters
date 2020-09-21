@@ -5,6 +5,9 @@ TextObject PPTextObject;
 
 SongID songID = SongID(std::string("Wow"), BeatmapDifficulty::Easy);
 GameplayModifiers* mods;
+bool Ranked;
+GameplayModifiersModelSO* modifiersModel;
+float _multiplier;
 
 
 void PP_Init(IDifficultyBeatmap* diff, std::string SongID, GameplayModifiers* Mods)
@@ -15,27 +18,38 @@ void PP_Init(IDifficultyBeatmap* diff, std::string SongID, GameplayModifiers* Mo
 }
 
 void PP_Start(Il2CppObject *self) {
+	
 	auto ScoreText = *GetFieldValue(self, "_scoreText");
 	auto ScoreTextTransform = *GetPropertyValue(ScoreText, "transform");
 	auto ScoreTextParentTransform =
 	*GetPropertyValue(ScoreTextTransform, "parent");
 
 	PPTextObject.parentTransform = ScoreTextParentTransform;
-  
-	PPTextObject.text = "0.00pp";
+  	
+	//GameplayModifiers* updatedModifiers = AllowedPositiveModifiers(songID) ? mods : RemovePositiveModifiers(mods);
+	//_multiplier = CalculateMultiplier(modifiersModel, updatedModifiers);
 
-	PPTextObject.sizeDelta = {-140, 230};
+	PPTextObject.text = "0.00pp";
+	Ranked = true;
+	if(!IsRanked(songID))
+	{
+		PPTextObject.text = "Song Not Ranked!";
+		Ranked = false;
+	}
+	PPTextObject.sizeDelta = {0, -20};
 	PPTextObject.fontSize = 12.0F;
 	PPTextObject.create();
 }
 
 
 
-void PP_Update(float Percentage) {
-  if (PPTextObject.gameObj == nullptr) {
-    return;
-  }
-		getLogger().debug(songID.id + std::string(" ") + std::to_string(Percentage));
-	getLogger().debug(songID.id + " " + std::to_string(songID.difficulty.value));
-	PPTextObject.set(std::to_string(CalculatePP(songID, Percentage)) + "pp");
+void PP_Update(float relativeScore) {
+	if (PPTextObject.gameObj == nullptr || !Ranked || modifiersModel == nullptr) {
+		return;
+	}
+
+	float acc = relativeScore;// * _multiplier;
+
+
+	PPTextObject.set(std::to_string(CalculatePP(songID, acc)) + "pp");
 }

@@ -25,6 +25,7 @@ std::string version;
 
 MAKE_HOOK_OFFSETLESS(UIStart, void, Il2CppObject* self) {
     UIStart(self);
+
     if(NoHud) return;
     if(getConfig().config["Accuracy Counter"].GetBool())
     {
@@ -207,13 +208,19 @@ MAKE_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, void, Il2CppOb
     float num = (float)score / (float)maxPossibleScore;
     getLogger().debug(std::to_string(num));
     PB_Update(num * 100.0f);
-    PP_Update(num);
+    float RelativeScore = CRASH_UNLESS(GetPropertyValue<float>(self, "relativeScore"));
+    PP_Update(RelativeScore);
 }
 
 MAKE_HOOK_OFFSETLESS(StartConfigUI, void, Il2CppObject* self)
 {
     StartConfigUI(self);
     SettingsUI_Start(self);
+}
+MAKE_HOOK_OFFSETLESS(ScoreController_Start, void, ScoreController* self)
+{
+    ScoreController_Start(self);
+    modifiersModel = self->gameplayModifiersModel;
 }
 
 extern "C" void setup(ModInfo& info) {
@@ -246,4 +253,5 @@ extern "C" void load() {
     INSTALL_HOOK_OFFSETLESS(SpawnObstacle, FindMethodUnsafe("", "BeatmapObjectSpawnController", "SpawnObstacle", 1));
     INSTALL_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, FindMethodUnsafe("", "RelativeScoreAndImmediateRankCounter", "UpdateRelativeScoreAndImmediateRank", 4));
     INSTALL_HOOK_OFFSETLESS(StartConfigUI, FindMethodUnsafe("", "PauseMenuManager", "Start", 0));
+    INSTALL_HOOK_OFFSETLESS(ScoreController_Start, FindMethodUnsafe("", "ScoreController", "Start", 0));
 }

@@ -266,7 +266,7 @@ void PP_Init(IDifficultyBeatmap* diff, std::string SongID, GameplayModifiers* Mo
 
 void PP_Start(Il2CppObject *self);
 
-void PP_Update(float Percentage);
+void PP_Update(float relativeScore);
 
 static std::vector<std::string> split(std::string const &str, const char delim)
 {
@@ -293,3 +293,5 @@ static std::string GetHash(std::string levelId)
     getLogger().debug(levelId);
     return levelId;
 }
+
+extern GameplayModifiersModelSO* modifiersModel;

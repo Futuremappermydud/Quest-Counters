@@ -26,15 +26,15 @@ float GetPP(SongID songID)
         getLogger().debug("%s does not exist in data!", NewID.c_str());
         return 0.0f;
     }
-    for (auto& item : data) {
-        getLogger().debug("item exists! key: %s value: %f", item.first.c_str(), item.second._Easy_SoloStandard);
-    }
+    //for (auto& item : data) {
+    //    getLogger().debug("item exists! key: %s value: %f", item.first.c_str(), item.second._Easy_SoloStandard);
+    //}
 
-    getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._Easy_SoloStandard));
-    getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._Normal_SoloStandard));
-    getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._Hard_SoloStandard));
-    getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._Expert_SoloStandard));
-    getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._ExpertPlus_SoloStandard));
+    //getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._Easy_SoloStandard));
+    //getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._Normal_SoloStandard));
+    //getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._Hard_SoloStandard));
+    //getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._Expert_SoloStandard));
+    //getLogger().debug(NewID + " " + std::to_string(data.at(NewID)._ExpertPlus_SoloStandard));
     if (!Init)
     {
         getLogger().error("Tried to use PPData when it wasn't initialized, Did PPDownloader not get called?");
