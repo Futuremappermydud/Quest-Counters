@@ -205,6 +205,7 @@ MAKE_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, void, Il2CppOb
 {
     RelativeScoreAndImmediateRankCounter_Update(self, score, modifiedScore, maxPossibleScore, maxPossibleModifiedScore);
     float num = (float)score / (float)maxPossibleScore;
+    getLogger().debug(std::to_string(num));
     PB_Update(num * 100.0f);
     PP_Update(num * 100.0f);
 }
