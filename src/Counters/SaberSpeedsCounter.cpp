@@ -28,7 +28,7 @@ void Speed_Update(float LeftSpeed, float RightSpeed)
 {
 	if(LeftSpeedTextObject.gameObj != nullptr)
 	{
-		LeftSpeedTextObject.set("\n\n\n\n\n\n<color=#ff6347>Left</color> Saber Speed: " + std::to_string((LeftSpeed *100) / 100).substr(0, 5));
-	 RightSpeedTextObject.set("\n\n\n\n\n\n\n<color=#ADD8E6>Right</color> Saber Speed: " + std::to_string((RightSpeed *100) / 100).substr(0, 5));
+		LeftSpeedTextObject.set("\n\n\n\n\n\n<color=#ff6347>Left</color> Saber Speed: " + Round((LeftSpeed *100) / 100));
+	 RightSpeedTextObject.set("\n\n\n\n\n\n\n<color=#ADD8E6>Right</color> Saber Speed: " + Round((RightSpeed *100) / 100));
 	}
 }

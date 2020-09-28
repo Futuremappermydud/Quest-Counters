@@ -9,3 +9,4 @@
 #include "../extern/BeatSaber-Quest-Codegen/include/GlobalNamespace/LevelCompletionResults.hpp"
 #include "../extern/BeatSaber-Quest-Codegen/include/TMPro/TextMeshProUGUI.hpp"
 #include "../extern/BeatSaber-Quest-Codegen/include/UnityEngine/Transform.hpp"
+#include "../extern/BeatSaber-Quest-Codegen/include/UnityEngine/GameObject.hpp"

@@ -19,8 +19,8 @@ void Bomb_Start(Il2CppObject* self)
 
 void Bomb_Update()
 {
+	Stats_BombsHit++;
 	if(BombTextObject.gameObj == nullptr) {return;}
 	HitBombs++;
-	Stats_BombsHit++;
 	BombTextObject.set("\n\n\n\n\nHit <color=#545454>Bombs</color>: " + std::to_string(HitBombs));
 }

@@ -29,9 +29,6 @@ void PP_Start(Il2CppObject *self) {
 
 	PPTextObject.parentTransform = ScoreTextParentTransform;
   	
-	GameplayModifiers* updatedModifiers = AllowedPositiveModifiers(songID) ? mods : RemovePositiveModifiers(mods);
-	_multiplier = CalculateMultiplier(modifiersModel, updatedModifiers);
-
 	PPTextObject.text = "0.00pp";
 	Ranked = true;
 	if(!IsRanked(songID))
@@ -39,21 +36,26 @@ void PP_Start(Il2CppObject *self) {
 		PPTextObject.text = "Song Not Ranked!";
 		Ranked = false;
 	}
-	PPTextObject.sizeDelta = {-300, -120};
-	PPTextObject.fontSize = 4.0F;
+	else
+	{
+		GameplayModifiers* updatedModifiers = AllowedPositiveModifiers(songID) ? mods : RemovePositiveModifiers(mods);
+		_multiplier = CalculateMultiplier(modifiersModel, updatedModifiers);
+	}
+	
+	PPTextObject.sizeDelta = {-325, -120};
+	PPTextObject.fontSize = 12.0F;
 	PPTextObject.create();
 }
 
 void PP_Update(float Percentage) {
-	if (PPTextObject.gameObj == nullptr || !Ranked || modifiersModel == nullptr) {
-		return;
-	}
-	getLogger().debug("Percentage %f", Percentage);
 	float acc = Percentage * _multiplier;
 
 	float pp = CalculatePP(songID, acc);
 
 	Stats_PP = pp;
+	if (PPTextObject.gameObj == nullptr || !Ranked || modifiersModel == nullptr) {
+		return;
+	}
 
 	PPTextObject.set(Round(pp) + "pp");
 }

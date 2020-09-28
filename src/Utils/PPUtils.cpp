@@ -50,7 +50,8 @@ void InitializePPUtils()
 
 bool AllowedPositiveModifiers(SongID songID)
 {
-    return songsAllowingPositiveModifiers.contains(songID.id);
+    std::string NewID = GetHash(str_toupper(songID.id));
+    return songsAllowingPositiveModifiers.contains(NewID);
 }
 
 float Lerp(float x1, float y1, float x2, float y2, float x3, int i)

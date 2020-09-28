@@ -20,8 +20,8 @@ void Miss_Start(Il2CppObject* self)
 
 void Miss_Update()
 {
+	Stats_MissedNotes++;
 	if(MissTextObject.gameObj == nullptr) {return;}
 	MissedNotes++;
-	Stats_MissedNotes++;
 	MissTextObject.set("\n\n\n\n<color=#FF0000>Missed</color> Notes: " + std::to_string(MissedNotes));
 }

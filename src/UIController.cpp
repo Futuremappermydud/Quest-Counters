@@ -235,7 +235,7 @@ void SettingsUI_Start(Il2CppObject* self)
 
 	ChangesMadeText.parentTransform = setParentTransform(continueButton, 2);
 	
-	ChangesMadeText.text = "<i><b>Changes made please restart the song for them to take effect!</b></i>";
+	ChangesMadeText.text = "<i><b>Changes made - please restart the song for them to take effect!</b></i>";
 
 	ChangesMadeText.fontSize = 6.0F;
 	Color color = {255, 0, 0, 1};

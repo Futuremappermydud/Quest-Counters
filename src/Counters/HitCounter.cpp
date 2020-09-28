@@ -19,8 +19,8 @@ void Hit_Start(Il2CppObject* self)
 
 void Hit_Update()
 {
+	Stats_HitNotes++;
 	if(HitTextObject.gameObj == nullptr) {return;}
 	HitNotes++;
 	HitTextObject.set("\n\n\n<color=#00FF00>Hit</color> Notes: " + std::to_string(HitNotes));
-	Stats_HitNotes++;
 }

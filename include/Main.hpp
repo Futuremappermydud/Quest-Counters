@@ -23,6 +23,8 @@
 using namespace il2cpp_utils;
 using namespace CustomUI;
 using namespace GlobalNamespace;
+using namespace UnityEngine;
+using namespace TMPro;
 
 static ModInfo modInfo;
 
@@ -140,9 +142,9 @@ class CustomButton {
         Il2CppObject* parentTransform = nullptr;
         Il2CppObject* TMPLocalizer = nullptr;
         Il2CppObject* rectTransform = nullptr;
-        Vector3 sizeDelta = {0, 0, 0};
-        Vector3 scale = {1.0f, 1.0f, 1.0f};
-        Vector3 rotation = {0, 0, 0};
+        UnityEngine::Vector3 sizeDelta = {0, 0, 0};
+        UnityEngine::Vector3 scale = {1.0f, 1.0f, 1.0f};
+        UnityEngine::Vector3 rotation = {0, 0, 0};
         float fontSize = 10.0f;
         bool toggle = true;//Use this when creating toggles
         std::string text = "Custom Button UI";
@@ -240,7 +242,7 @@ class CustomButton {
             return false;
         }
  
-        void setPos(Vector3 pos) {//Doesnt work yet, work on it more later
+        void setPos(UnityEngine::Vector3 pos) {//Doesnt work yet, work on it more later
             il2cpp_utils::RunMethod(buttonTransform, "set_localPosition", pos);
         }
  

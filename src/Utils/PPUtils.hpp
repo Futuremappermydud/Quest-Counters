@@ -39,6 +39,13 @@ const float GN_SS = 0.04f;
 const float FS_ORIGINAL = 0.08f;
 const float FS_SS = 0.08f;
 
+static std::string str_toupper(std::string s) {
+    std::transform(s.begin(), s.end(), s.begin(), 
+                   [](unsigned char c){ return std::toupper(c); } // correct
+                  );
+    return s;
+}
+
 static float CalculateMultiplier(GameplayModifiersModelSO* gameplayModifiersModelSO, GameplayModifiers* modifiers)
 {
     float multiplier = gameplayModifiersModelSO->GetTotalMultiplier(modifiers);
