@@ -233,7 +233,7 @@ MAKE_HOOK_OFFSETLESS(ResultsViewController_SetDataToUI, void, ResultsViewControl
 
 extern "C" void setup(ModInfo& info) {
     info.id = "QuestCounters";
-    info.version = "1.2.5";
+    info.version = "1.2.6";
 
     modInfo = info;
     

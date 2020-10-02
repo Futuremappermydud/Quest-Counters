@@ -1,5 +1,4 @@
 #include "../../include/Main.hpp"
-#include "../Utils/PPUtils.hpp"
 #include <dlfcn.h>
 #include <iomanip>
 #include <sstream>
@@ -38,8 +37,8 @@ void PP_Start(Il2CppObject *self) {
 	}
 	else
 	{
-		GameplayModifiers* updatedModifiers = AllowedPositiveModifiers(songID) ? mods : RemovePositiveModifiers(mods);
-		_multiplier = CalculateMultiplier(modifiersModel, updatedModifiers);
+		//GameplayModifiers* updatedModifiers = AllowedPositiveModifiers(songID) ? mods : RemovePositiveModifiers(mods);
+		//_multiplier = CalculateMultiplier(modifiersModel, updatedModifiers);
 	}
 	
 	PPTextObject.sizeDelta = {-325, -120};

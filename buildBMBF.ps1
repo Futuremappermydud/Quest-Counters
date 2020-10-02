@@ -7,4 +7,4 @@ if (-not ($PSVersionTable.PSEdition -eq "Core")) {
 }
 
 & $buildScript NDK_PROJECT_PATH=$PSScriptRoot APP_BUILD_SCRIPT=$PSScriptRoot/Android.mk NDK_APPLICATION_MK=$PSScriptRoot/Application.mk
-Compress-Archive -Path "./libs/arm64-v8a/libquestcounters.so","./bmbfmod.json","./extern/libbeatsaber-hook_0_6_0.so","./extern/libcustom-ui_0_1_1.so","./extern/libcodegen_0_2_4.so" -DestinationPath "./questcounters.zip" -Update
+Compress-Archive -Path "./libs/arm64-v8a/libquestcounters.so","./bmbfmod.json","./extern/libbeatsaber-hook_0_7_1.so","./extern/libcustom-ui_0_1_2.so","./extern/libcodegen_0_2_6.so","./extern/libPPUtils_0_1_0.so" -DestinationPath "./questcounters.zip" -Update
