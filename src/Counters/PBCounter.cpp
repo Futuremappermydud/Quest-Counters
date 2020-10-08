@@ -72,15 +72,17 @@ std::string GetColor(float percent) {
 }
 
 void PB_Update(float percent) {
-  if (PBTextObject.gameObj == nullptr || currentScore == 0) {
-    return;
-  }
-  float outPercent = (percent / currentPercentage) * 100.0f;
-  float OutCurrentPercent = currentPercentage;
-  if (OutCurrentPercent < 1) {
-    OutCurrentPercent = outPercent;
-  }
-  PBTextObject.set("<color=" + GetColor(outPercent) + ">PB: " +
-                   std::to_string(currentPercentage).substr(0, 5) + "% (" +
-                   std::to_string(outPercent).substr(0, 5) + "%)</color>");
+	if (PBTextObject.gameObj == nullptr || currentScore == 0) {
+		return;
+	}
+  	float outPercent = (percent / currentPercentage) * 100.0f;
+	float OutCurrentPercent = currentPercentage;
+	if (OutCurrentPercent < 1) {
+		OutCurrentPercent = outPercent;
+	}
+
+	float yes = outPercent - currentPercentage;
+	PBTextObject.set("<color=" + GetColor(yes) + ">PB: " +
+					Round(currentPercentage) + "% (+" +
+					Round(yes) + "%)</color>");
 }

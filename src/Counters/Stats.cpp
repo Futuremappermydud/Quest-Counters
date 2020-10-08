@@ -1,12 +1,12 @@
 #include "../../include/Main.hpp"
-#include "extern/PP-Utils/shared/PPUtils.hpp"
+#include "../Utils/PPUtils.hpp"
 
 TextObject StatsTextObject;
 int Stats_HitNotes = 0;
 float Stats_PP = 0;
 int Stats_MissedNotes = 0;
 int Stats_BombsHit = 0;
-UnityEngine::GameObject* Parent;
+GameObject* Parent;
 
 void Destroy(Il2CppObject* obj)
 {
@@ -15,8 +15,7 @@ void Destroy(Il2CppObject* obj)
 
 void Stats_Start(ResultsViewController* self)
 {
-	return;
-	Parent = UnityEngine::GameObject::New_ctor();
+	Parent = GameObject::New_ctor();
 	if(StatsTextObject.gameObj != nullptr)
 	{
 		Destroy(StatsTextObject.gameObj);

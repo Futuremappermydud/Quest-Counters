@@ -7,7 +7,7 @@ Il2CppObject* DownloadHandler = nullptr;
 Il2CppObject* WebRequestAsyncOp = nullptr;
 Il2CppString* JsonStr = nullptr; 
 
-CustomUI::TextObject VersionText;
+//CustomUI::TextObject VersionText;
 
 std::string text = "<size=6><mspace=3.5><align=\"center\">NO INTERNET</align></mspace></size><br><color=#88202088>Error</color>";
 
@@ -34,12 +34,14 @@ void WebRequest() {
 }
 void Update_Update()
 {
-	WebRequest();
+	//WebRequest();
 }
 
 void Update_Start(Il2CppObject* self)
 {
-	//Destroy Object if the Object isnt just now created
+    return;
+	/*
+    //Destroy Object if the Object isnt just now created
     if (VersionText.gameObj != nullptr)
     {
         RunMethod(GetClassFromName("UnityEngine", "Object"), "Destroy", VersionText.gameObj);
@@ -55,4 +57,6 @@ void Update_Start(Il2CppObject* self)
     VersionText.text = "<color=#FFD700>Quest Counters</color>\nYour Version: " + std::string(version) + "\nRecent Version: " + text;
     //Create
     CRASH_UNLESS(VersionText.create());
+    */
 }
+

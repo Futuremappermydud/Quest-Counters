@@ -944,6 +944,9 @@ TEST(Reader, ParseString_Error) {
     TEST_STRING_ERROR(kParseErrorStringUnicodeSurrogateInvalid, "[\"\\uD800X\"]", 2u, 8u);
     TEST_STRING_ERROR(kParseErrorStringUnicodeSurrogateInvalid, "[\"\\uD800\\uFFFF\"]", 2u, 14u);
 
+    // Single low surrogate pair in string is invalid.
+    TEST_STRING_ERROR(kParseErrorStringUnicodeSurrogateInvalid, "[\"\\udc4d\"]", 2u, 8u);
+
     // Missing a closing quotation mark in string.
     TEST_STRING_ERROR(kParseErrorStringMissQuotationMark, "[\"Test]", 7u, 7u);
 
@@ -2196,6 +2199,30 @@ TEST(Reader, ParseNanAndInfinity) {
 
 #undef TEST_NAN_INF_ERROR
 #undef TEST_NAN_INF
+}
+
+TEST(Reader, EscapedApostrophe) {
+    const char json[] = " { \"foo\": \"bar\\'buzz\" } ";
+
+    BaseReaderHandler<> h;
+
+    {
+        StringStream s(json);
+        Reader reader;
+        ParseResult r = reader.Parse<kParseNoFlags>(s, h);
+        EXPECT_TRUE(reader.HasParseError());
+        EXPECT_EQ(kParseErrorStringEscapeInvalid, r.Code());
+        EXPECT_EQ(14u, r.Offset());
+    }
+
+    {
+        StringStream s(json);
+        Reader reader;
+        ParseResult r = reader.Parse<kParseEscapedApostropheFlag>(s, h);
+        EXPECT_FALSE(reader.HasParseError());
+        EXPECT_EQ(kParseErrorNone, r.Code());
+        EXPECT_EQ(0u, r.Offset());
+    }
 }
 
 RAPIDJSON_DIAG_POP

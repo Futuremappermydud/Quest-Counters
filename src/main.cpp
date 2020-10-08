@@ -2,6 +2,8 @@
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-utils.hpp"
 #include "../extern/beatsaber-hook/shared/utils/il2cpp-functions.hpp"
 #include "../extern/beatsaber-hook/shared/utils/utils.h"
+#include "questui/shared/QuestUI.hpp"
+#include "UI.hpp"
 
 bool _360 = false;
 
@@ -22,6 +24,7 @@ bool NoHud = false;
 int Notes;
 
 std::string version;
+
 
 MAKE_HOOK_OFFSETLESS(UIStart, void, Il2CppObject* self) {
     UIStart(self);
@@ -108,9 +111,6 @@ MAKE_HOOK_OFFSETLESS(SongStart, void, Il2CppObject* self, IDifficultyBeatmap* di
     auto levelID = GetHash(to_utf8(csstrtostr(difficultyBeatmap->get_level()->get_levelID())));
     
     PP_Init(difficultyBeatmap, levelID, gameplayModifiers);
-    
-    ToggleButton.destroy();
-    SwitchButton.destroy();
 
     NotesLeft_GetNotes(difficultyBeatmap);
     WallsLeft_GetWalls(difficultyBeatmap);
@@ -213,12 +213,6 @@ MAKE_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, void, Il2CppOb
     RelativeScoreAndImmediateRankCounter_Update(self, score, modifiedScore, maxPossibleScore, maxPossibleModifiedScore);
 }
 
-MAKE_HOOK_OFFSETLESS(StartConfigUI, void, Il2CppObject* self)
-{
-    StartConfigUI(self);
-    SettingsUI_Start(self);
-}
-
 MAKE_HOOK_OFFSETLESS(ScoreController_Start, void, ScoreController* self)
 {
     ScoreController_Start(self);
@@ -235,8 +229,6 @@ extern "C" void setup(ModInfo& info) {
     info.id = "QuestCounters";
     info.version = "1.2.6";
 
-    modInfo = info;
-    
     getConfig().Load();
 
     version = info.version;
@@ -248,6 +240,12 @@ extern "C" void load() {
         SaveConfig();
     }
     il2cpp_functions::Init();
+
+    QuestUI::Init();
+
+    custom_types::Register::RegisterType<QuestCounters::UIController>();
+    QuestUI::Register::RegisterModSettingsViewController<QuestCounters::UIController*>(ModInfo{"Quest Counters", version}, "Quest Counters");
+
     INSTALL_HOOK_OFFSETLESS(RawScore, il2cpp_utils::FindMethodUnsafe("", "ScoreModel", "RawScoreWithoutMultiplier", 4));
     INSTALL_HOOK_OFFSETLESS(FinishScore, il2cpp_utils::FindMethodUnsafe("", "CutScoreBuffer", "HandleSwingRatingCounterDidFinishEvent", 1));
     INSTALL_HOOK_OFFSETLESS(UIStart, il2cpp_utils::FindMethodUnsafe("", "ScoreUIController", "Start", 0));
@@ -260,7 +258,6 @@ extern "C" void load() {
     INSTALL_HOOK_OFFSETLESS(StandardLevelDetailView_RefreshContent, FindMethodUnsafe("", "StandardLevelDetailView", "RefreshContent", 0));
     INSTALL_HOOK_OFFSETLESS(SpawnObstacle, FindMethodUnsafe("", "BeatmapObjectSpawnController", "SpawnObstacle", 1));
     INSTALL_HOOK_OFFSETLESS(RelativeScoreAndImmediateRankCounter_Update, FindMethodUnsafe("", "RelativeScoreAndImmediateRankCounter", "UpdateRelativeScoreAndImmediateRank", 4));
-    INSTALL_HOOK_OFFSETLESS(StartConfigUI, FindMethodUnsafe("", "PauseMenuManager", "Start", 0));
     INSTALL_HOOK_OFFSETLESS(ScoreController_Start, FindMethodUnsafe("", "ScoreController", "Start", 0));
     INSTALL_HOOK_OFFSETLESS(ResultsViewController_SetDataToUI, FindMethodUnsafe("", "ResultsViewController", "SetDataToUI", 0));
 }

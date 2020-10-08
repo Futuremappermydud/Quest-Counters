@@ -1,8 +1,0 @@
-
-extern/
-qpm.lock.json
-*.backup
-*.so
-ndkpath.txt
-obj/
-libs/

@@ -123,6 +123,19 @@ static void StartCoroutine(Function&& fun, Args&&... args) {
     t->detach();
 }
 
+template<typename T>
+struct identity {};
+
+template<typename Ret, typename C, typename... TArgs>
+struct identity<Ret(C::*)(TArgs...) const> {
+    using type = std::function<Ret(TArgs...)>;
+};
+
+template<typename Q>
+typename identity<decltype(&Q::operator())>::type wrapLambda(Q const& f) {
+    return f;
+}
+
 // logs the function, file and line, sleeps to allow logs to flush, then terminates program
 void safeAbort(const char* func, const char* file, int line);
 // sets "file" and "line" to the file and line you call this macro from
@@ -162,19 +175,6 @@ template<typename TRet, typename ...TArgs>
 // A generic function pointer, which can be called with and set to a `getRealOffset` call
 using function_ptr_t = TRet(*)(TArgs...);
 
-// Yoinked from: https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
-// TODO: This should be removed once std::format exists
-template<typename... TArgs>
-std::string string_format(const std::string_view format, TArgs ... args)
-{
-    size_t size = snprintf(nullptr, 0, format.data(), args ...) + 1; // Extra space for '\0'
-    if (size <= 0)
-        return "";
-    std::unique_ptr<char[]> buf(new char[size]); 
-    snprintf(buf.get(), size, format.data(), args...);
-    return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-}
-
 #if __has_feature(cxx_exceptions)
 template<class T>
 auto throwUnless(T&& arg, const char* func, const char* file, int line) {
@@ -193,7 +193,7 @@ extern "C" {
 
 // Creates all directories for a provided file_path
 // Ex: /sdcard/Android/data/something/files/libs/
-int mkpath(std::string_view file_path, mode_t mode);
+int mkpath(std::string_view file_path);
 
 // Restores an existing stringstream to a newly created state.
 void resetSS(std::stringstream& ss);

@@ -1,47 +1,51 @@
 {
-    "id": "QuestCounters",
-    "name": "Quest Counters",
-    "author": "Futuremappermydud",
-    "description": [
-        
-    ],
-    "category": "Gameplay",
-    "gameVersion": "1.11.1",
-    "version": "1.2.6",
-    "platform": "Quest",
-    "components": [
-        {
-            "type": "HookMod",
-            "installAction": {
-                "installLibraryFile": "libquestcounters.so"
-            },
-            "uninstallAction": {
-                "removeLibraryFile": "libquestcounters.so"
-            }
-        },
-	    {
-            "type": "HookModLibrary",
-            "installAction": {
-                "installLibraryFile": "libbeatsaber-hook_0_7_1.so"
-            }
-        },
-        {
-            "type": "HookModLibrary",
-            "installAction": {
-                "installLibraryFile": "libcustom-ui_0_1_2.so"
-            }
-        },
-        {
-            "type": "HookModLibrary",
-            "installAction": {
-                "installLibraryFile": "libcodegen_0_2_6.so"
-            }
-        },
-        {
-            "type": "HookModLibrary",
-            "installAction": {
-                "installLibraryFile": "libPPUtils_0_1_0.so"
-            }
-        }
-    ]
+  "id": "QuestCounters",
+  "name": "Quest Counters",
+  "version": "1.2.6",
+  "author": "Futuremappermydud",
+  "description": [],
+  "category": "Gameplay",
+  "gameVersion": "1.11.1",
+  "platform": "Quest",
+  "components": [
+    {
+      "type": "HookMod",
+      "installAction": {
+        "installLibraryFile": "libquestcounters.so"
+      },
+      "uninstallAction": {
+        "removeLibraryFile": "libquestcounters.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libbeatsaber-hook_0_7_1.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libcodegen_0_2_6.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libcustom-types_0_2_5.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libquestui.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libcustom-ui_0_1_2.so"
+      }
+    }
+  ]
 }

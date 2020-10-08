@@ -1,17 +1,17 @@
-#include "../include/Main.hpp"
+#include "../include/UI.hpp"
+#include "questui/shared/CustomTypes/Components/Backgroundable.hpp"
+#include "UnityEngine/Events/UnityAction_1.hpp"
+#include "UnityEngine/Events/UnityAction.hpp"
+#include "UnityEngine/RectOffset.hpp"
+using namespace QuestUI::BeatSaberUI;
+using namespace UnityEngine::UI;
+using namespace UnityEngine;
 
-Color DefaultColor;
-Color Changes = {0, 255, 0, 1};
+DEFINE_CLASS(QuestCounters::UIController);
 
-CustomButton SwitchButton;
+GameObject* Modal;
 
-CustomButton ToggleButton;
-
-CustomUI::TextObject ChangesMadeText;
-
-Il2CppObject* restartImage;
-
-enum UI 
+enum UITypes
 {
 	Hit,
 	Miss,
@@ -24,46 +24,9 @@ enum UI
 	PlayCount,
 	LegacyAcc,
 	PPCounter,
-} UIType;
+};
 
-int index = 0;
-bool setActive(Il2CppObject* object, bool isActive) 
-{
-    if(object != nullptr) {
-        RET_0_UNLESS(RunMethod(object, "SetActive", isActive));
-        return true;
-    }
-    getLogger().debug("Game object is null, not setting active");
-    return false;
-}
-
-void SetPosition(Il2CppObject* Obj, Vector3 pos)
-{
-	Il2CppObject* Transform = CRASH_UNLESS(GetPropertyValue(Obj, "transform"));
-	SetPropertyValue(Transform, "position", pos);
-}
-
-Il2CppObject* setParentTransform(Il2CppObject* Obj, int parentedAmount) {
-	Il2CppObject* parentTransform;
-    if(parentedAmount < 1) {
-        getLogger().debug("Parented amount has to be greater than 0, setting to 1...");
-        parentedAmount = 1;
-    }
-    Il2CppObject* transform = *RunMethod(Obj, "get_transform");
-    std::vector<Il2CppObject*> parents;
-    Il2CppObject* firstParent = *RunMethod(transform, "GetParent");
-    parents.push_back(firstParent);
-    for(int i = 1; i < parentedAmount; i++) {
-        Il2CppObject* otherParent = *RunMethod(parents[i-1], "GetParent");
-        parents.push_back(otherParent);
-    }
-    parentTransform = parents[parents.size()-1];
-
-	return parentTransform;
-}
-
-
-void SetConfigValue(UI Type, bool Value)
+void SetConfigValue(UITypes Type, bool Value)
 {
 	switch (Type)
 	{
@@ -104,11 +67,9 @@ void SetConfigValue(UI Type, bool Value)
 		break;
 	}
 	getConfig().Write();
-	setActive(ChangesMadeText.gameObj, true);
-	SetPropertyValue(restartImage, "color", Changes);
 }
 
-bool GetConfigValue(UI Type)
+bool GetConfigValue(UITypes Type)
 {
 	LoadConfig();
 	switch (Type)
@@ -152,36 +113,36 @@ bool GetConfigValue(UI Type)
 	
 }
 
-std::string GetText(UI Type)
+std::string GetText(UITypes Type)
 {
 	switch (Type)
 	{
 	case Hit:
-		return "Hits";
+		return "Hit Counter";
 		break;
 	case Miss:
-		return "Misses";
+		return "Misses Counter";
 		break;
 	case Bomb:
-		return "Bombs";
+		return "Bombs Hit Counter";
 		break;
 	case Accuracy:
-		return "Accuracy";
+		return "Accuracy Counter";
 		break;
 	case PB:
-		return "PB";
+		return "Personal Best Counter";
 		break;
 	case SaberSpeed:
-		return "Speed";
+		return "Speed Counter";
 		break;
 	case WallsLeft:
-		return "Walls Left";
+		return "Walls Left Counter";
 		break;
 	case NotesLeft:
-		return "Notes Left";
+		return "Notes Left Counter";
 		break;
 	case PlayCount:
-		return "Play Count";
+		return "Plays Counter";
 		break;
 	case LegacyAcc:
 		return "Legacy Acc Counter";
@@ -195,91 +156,164 @@ std::string GetText(UI Type)
 	}
 }
 
-std::string GetEnabledText(UI Type)
+void SetHit(QuestCounters::UIController* vc, bool value)
 {
-	return GetConfigValue(Type) ? "Enabled" : "Disabled";
+	SetConfigValue(UITypes::Hit, value);
+}
+void SetMiss(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::Miss, value);
+}
+void SetBomb(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::Bomb, value);
+}
+void SetAccuracy(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::Accuracy, value);
+}
+void SetPP(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::PPCounter, value);
+}
+void SetLegacyAcc(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::LegacyAcc, value);
+}
+void SetNotesLeft(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::NotesLeft, value);
+}
+void SetSpeed(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::SaberSpeed, value);
+}
+void SetWallsLeft(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::WallsLeft, value);
+}
+void SetPB(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::PB, value);
+}
+void SetPlayCount(QuestCounters::UIController* vc, bool value)
+{
+	SetConfigValue(UITypes::PlayCount, value);
 }
 
-void SwitchCounter()
+void UnhideModal()
 {
-	index++;
-	if(index == 11) index = 0;
-	UIType = (UI)index;
-	std::string Text = GetText(UI(index));
-    RunMethod(SwitchButton.TMP, "set_text", createcsstr(Text));
-	RunMethod(ToggleButton.TMP, "set_text", createcsstr(GetEnabledText(UI(index))));
+	Modal->SetActive(true);
+}
+void hideModal()
+{
+	Modal->SetActive(false);
 }
 
-void Toggle()
+bool Active = false;
+
+void ToggleModal()
 {
-	SetConfigValue(UI(index) , ! GetConfigValue(UI(index)));
-	RunMethod(ToggleButton.TMP, "set_text", createcsstr(GetEnabledText(UI(index))));
+	Active = !Active;
+	Active ? hideModal() : UnhideModal();
 }
 
-void SettingsUI_Start(Il2CppObject* self)
-{
-	auto continueButton = CRASH_UNLESS(*GetFieldValue(self, "_continueButton"));
-	auto continueButtonObj = CRASH_UNLESS(*GetPropertyValue(continueButton, "gameObject"));
+void QuestCounters::UIController::DidActivate(bool firstActivation, HMUI::ViewController::ActivationType activationType){
+	if(firstActivation)
+	{
+		HorizontalLayoutGroup* layout = QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(get_rectTransform());
+		layout->set_spacing(2.5f);
+		
+		VerticalLayoutGroup* layout1 = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(layout->get_rectTransform());
+		VerticalLayoutGroup* layout2 = QuestUI::BeatSaberUI::CreateVerticalLayoutGroup(layout->get_rectTransform());
+		layout1->set_spacing(3.5f);
+		layout2->set_spacing(3.5f);
 
-	auto restartButton = CRASH_UNLESS(*GetFieldValue(self, "_restartButton"));
-	auto restartButton2 = CRASH_UNLESS(*GetPropertyValue(restartButton, "gameObject"));
+		layout1->get_gameObject()->AddComponent<QuestUI::Backgroundable*>()->ApplyBackground(il2cpp_utils::createcsstr("round-rect-panel"));
+		layout2->get_gameObject()->AddComponent<QuestUI::Backgroundable*>()->ApplyBackground(il2cpp_utils::createcsstr("round-rect-panel"));
 
-	auto continueImage = CRASH_UNLESS(RunMethod(continueButtonObj, "GetComponentInChildren", GetSystemType("UnityEngine.UI", "Image")));
-	restartImage = CRASH_UNLESS(RunMethod(restartButton2, "GetComponentInChildren", GetSystemType("UnityEngine.UI", "Image")));
+		layout1->set_padding(UnityEngine::RectOffset::New_ctor(3, 3, 2, 2));
+		layout2->set_padding(UnityEngine::RectOffset::New_ctor(3, 3, 2, 2));
 
-	DefaultColor = CRASH_UNLESS(GetPropertyValue<Color>(continueImage, "color"));
+		ContentSizeFitter* layout1Fitter = layout1->get_gameObject()->AddComponent<ContentSizeFitter*>();
+		layout1Fitter->set_horizontalFit(ContentSizeFitter::FitMode::PreferredSize);
+		layout1Fitter->set_verticalFit(ContentSizeFitter::FitMode::PreferredSize);
 
-	SetPropertyValue(restartImage, "color", DefaultColor);
+		ContentSizeFitter* layout2Fitter = layout2->get_gameObject()->AddComponent<ContentSizeFitter*>();
+		layout2Fitter->set_horizontalFit(ContentSizeFitter::FitMode::PreferredSize);
+		layout2Fitter->set_verticalFit(ContentSizeFitter::FitMode::PreferredSize);
 
-	//Init Changes Made Text
+		ContentSizeFitter* layoutFitter = layout->get_gameObject()->AddComponent<ContentSizeFitter*>();
+		layoutFitter->set_horizontalFit(ContentSizeFitter::FitMode::Unconstrained);
+		layoutFitter->set_verticalFit(ContentSizeFitter::FitMode::PreferredSize);
 
-	ChangesMadeText.parentTransform = setParentTransform(continueButton, 2);
+		Transform* Parent1 = layout1->get_transform();
+		Transform* Parent2 = layout2->get_transform();
+
+		
+		auto HitToggle = CreateToggle(Parent1, GetText(UITypes::Hit), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::Hit, toggle); }));
+		HitToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::Hit));
+		QuestUI::BeatSaberUI::AddHoverHint(HitToggle, "Counts Your Hits!");
+		HitToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto MissToggle = CreateToggle(Parent1, GetText(UITypes::Miss), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::Miss, toggle); }));
+		MissToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::Miss));
+		QuestUI::BeatSaberUI::AddHoverHint(MissToggle, "Shows How Many Notes You Missed!");
+		MissToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto BombToggle = CreateToggle(Parent1, GetText(UITypes::Bomb), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::Bomb, toggle); }));
+		BombToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::Bomb));
+		QuestUI::BeatSaberUI::AddHoverHint(BombToggle, "Shows How Many Bombs You Hit!");
+		BombToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto AccuracyToggle = CreateToggle(Parent1, GetText(UITypes::Accuracy), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::Accuracy, toggle); }));
+		AccuracyToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::Accuracy));
+		QuestUI::BeatSaberUI::AddHoverHint(AccuracyToggle, "Shows Your Average Accuracy Per Hand!");
+		AccuracyToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto PBToggle = CreateToggle(Parent1, GetText(UITypes::PB), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::PB, toggle); }));
+		PBToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::PB));
+		QuestUI::BeatSaberUI::AddHoverHint(PBToggle, "Shows Your Personal Best And How Much Extra/Less You Have!");
+		PBToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto SpeedToggle = CreateToggle(Parent1, GetText(UITypes::SaberSpeed), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::SaberSpeed, toggle); }));
+		SpeedToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::SaberSpeed));
+		QuestUI::BeatSaberUI::AddHoverHint(SpeedToggle, "Shows How Fast Your Sabers Are Going! Note: This May Cause Lag!");
+		SpeedToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto WallsLeftToggle = CreateToggle(Parent2, GetText(UITypes::WallsLeft), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::WallsLeft, toggle); }));
+		WallsLeftToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::WallsLeft));
+		QuestUI::BeatSaberUI::AddHoverHint(WallsLeftToggle, "Shows How Many Walls Are Left!");
+		WallsLeftToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto NotesLeftToggle = CreateToggle(Parent2, GetText(UITypes::NotesLeft), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::NotesLeft, toggle); }));
+		NotesLeftToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::NotesLeft));
+		QuestUI::BeatSaberUI::AddHoverHint(NotesLeftToggle, "Shows How Many Notes Are Left!");
+		NotesLeftToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto PlayCountToggle = CreateToggle(Parent2, GetText(UITypes::PlayCount), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::PlayCount, toggle); }));
+		PlayCountToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::PlayCount));
+		QuestUI::BeatSaberUI::AddHoverHint(PlayCountToggle, "Shows How Many Times You Played This Song!");
+		PlayCountToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto PPToggle = CreateToggle(Parent2, GetText(UITypes::PPCounter), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::PPCounter, toggle); }));
+		PPToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::PPCounter));
+		QuestUI::BeatSaberUI::AddHoverHint(PPToggle, "Shows The Estimated Amount Of PP You will get!");
+		PPToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+		
+		auto LegacyAccToggle = CreateToggle(Parent2, GetText(UITypes::LegacyAcc), il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction_1<bool>>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction_1<bool>*)), this, +[](QuestCounters::UIController* view, bool toggle) { SetConfigValue(UITypes::LegacyAcc, toggle); }));
+		LegacyAccToggle->GetComponent<UI::Toggle*>()->set_isOn(GetConfigValue(UITypes::LegacyAcc));
+		QuestUI::BeatSaberUI::AddHoverHint(LegacyAccToggle, "Enables The Pre 0.2.5 Accuracy Counter!");
+		LegacyAccToggle->GetComponent<LayoutElement*>()->set_preferredWidth(50);
+
+		//Modal = CreateModalView(get_transform());
+
+		//auto Button = CreateUIButton(get_transform(), "OKButton", il2cpp_utils::MakeAction<UnityEngine::Events::UnityAction>(il2cpp_functions::class_get_type(classof(UnityEngine::Events::UnityAction*)), (Il2CppObject*)nullptr, UnhideModal), "Modal", nullptr );
 	
-	ChangesMadeText.text = "<i><b>Changes made - please restart the song for them to take effect!</b></i>";
-
-	ChangesMadeText.fontSize = 6.0F;
-	Color color = {255, 0, 0, 1};
-
-	ChangesMadeText.sizeDelta = {-39, 28};
-	ChangesMadeText.color = color;
-	ChangesMadeText.create();
-	setActive(ChangesMadeText.gameObj, false);
-
-	//Switch
-	
-    SwitchButton.setParentAndTransform(continueButton, 2);
-
-	SwitchButton.text = GetText((UI)index);
-
-    SwitchButton.fontSize = 4.3f;
-    SwitchButton.scale = {1, 1, 1};
-    SwitchButton.sizeDelta = {-50, 35, 0};
-    SwitchButton.onPress = SwitchCounter;
-    SwitchButton.create();
-    if(SwitchButton.TMPLocalizer != nullptr) {
-        RunMethod("UnityEngine", "Object", "Destroy", SwitchButton.TMPLocalizer);
-    }
-    RunMethod(SwitchButton.TMP, "set_enableWordWrapping", false);
-
-	//Toggle
-	
-    ToggleButton.setParentAndTransform(continueButton, 2);
-
-	ToggleButton.text = GetEnabledText((UI)index);
-
-    ToggleButton.fontSize = 4.3f;
-    ToggleButton.scale = {1, 1, 1};
-    ToggleButton.sizeDelta = {-50, 25, 0};
-    ToggleButton.onPress = Toggle;
-    ToggleButton.create();
-    if(ToggleButton.TMPLocalizer != nullptr) {
-        RunMethod("UnityEngine", "Object", "Destroy", ToggleButton.TMPLocalizer);
-    }
-    	RunMethod(ToggleButton.TMP, "set_enableWordWrapping", false);
+		//auto Text = CreateText(Modal->get_transform(), "test", UnityEngine::Vector2(0.0f, 0.0f));
+	}
 }
 
-void SettingsUI_End()
-{
-	ToggleButton.destroy();
-	SwitchButton.destroy();
+void QuestCounters::UIController::DidDeactivate(HMUI::ViewController::DeactivationType deactivationType) {
+
 }

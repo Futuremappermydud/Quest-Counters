@@ -1,23 +1,26 @@
 {
-    "configurations": [
-        {
-            "name": "Quest",
-            "defines": [
-                "MOD_ID=\"QuestCounters\"",
-                "VERSION=\"0.1.0\"",
-                "__GNUC__",
-                "__aarch64__"
-            ],
-            "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/extern/**",
-                "c:/Program Files/Unity/Hub/Editor/2019.3.1f1/Editor/Data/il2cpp/libil2cpp",
-                "d:/android-ndk-r21d/**"
-            ],
-            "cStandard": "c11",
-            "cppStandard": "c++20",
-            "intelliSenseMode": "clang-x64"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "defines": [
+        "MOD_ID=\"QuestCounters\"",
+        "VERSION=\"1.2.6\"",
+        "__GNUC__",
+        "__aarch64__",
+        "ID=\"Quest Counters\""
+      ],
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/extern/**",
+        "c:/Program Files/Unity/Hub/Editor/2019.3.1f1/Editor/Data/il2cpp/libil2cpp",
+        "d:/android-ndk-r21d/**",
+        "${workspaceFolder}/shared/**",
+        "${workspaceFolder}/extern/codegen/include/**"
+      ],
+      "name": "Quest",
+      "cStandard": "c11",
+      "cppStandard": "c++20",
+      "intelliSenseMode": "clang-x64"
+    }
+  ],
+  "version": 4
 }

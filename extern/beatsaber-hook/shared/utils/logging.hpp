@@ -9,6 +9,12 @@
 #include <unistd.h>
 #include <cmath> // Included to support cmath's definition of log
 #include <string_view>
+#include <algorithm>
+#include <string>
+#include <list>
+#include <mutex>
+#include "modloader/shared/modloader.hpp"
+#include "utils-functions.h"
 
 namespace Logging {
     enum Level {
@@ -24,84 +30,64 @@ namespace Logging {
 #undef log
 #endif
 
-#ifdef TAG
-// If TAG is defined, allow the user to log with that tag with a simple log macro
-#define logv(lvl, ...) __android_log_vprint(lvl, TAG, __VA_ARGS__)
-#ifndef FILE_LOG
-#define log(lvl, ...) __android_log_print(lvl, TAG, __VA_ARGS__)
-#else
-
-#ifndef CHARS_PER_ARG
-#define CHARS_PER_ARG 50
+#ifndef LOG_PATH
+#define LOG_PATH "/sdcard/Android/data/%s/files/logs/"
 #endif
 
-#ifndef LOG_PATH_FORMAT
-#define LOG_PATH_FORMAT "/sdcard/Android/data/%s/files/logs/"
-#endif
+class Logger;
 
-std::string get_level(int level);
-
-// Logs with the corresponding level and format string to the log file
-void log_file(int level, const char* format, ...);
-
-// Flushes the log file
-void log_flush();
-
-// Closes the log file
-void log_close();
-
-#define log(lvl, ...) do { __android_log_print(lvl, TAG, __VA_ARGS__); \
-log_file(lvl, __VA_ARGS__);} while(0);
-
-#ifndef STD_BUFFER_SIZE
-#define STD_BUFFER_SIZE 256
-#endif
-
-// From: https://codelab.wordpress.com/2014/11/03/how-to-use-standard-output-streams-for-logging-in-android-apps/
-static int pfd[2];
-static pthread_t thr;
-static void* thread_func(void*) {
-    ssize_t rdsz;
-    char buf[STD_BUFFER_SIZE];
-    while((rdsz = read(pfd[0], buf, sizeof buf - 1)) > 0) {
-        if(buf[rdsz - 1] == '\n') --rdsz;
-        buf[rdsz] = 0;  /* add null-terminator */
-        __android_log_write(ANDROID_LOG_INFO, TAG, buf);
-    }
-    return 0;
-}
-
-extern "C" {
-    // Redirects stdout and stderr to the android log stream. Call this once before using stdout/stderr
-    // Returns 0 on success, -1 otherwise
-    static int start_logger()
-    {
-        /* make stdout line-buffered and stderr unbuffered */
-        setvbuf(stdout, NULL, _IOLBF, 0);
-        setvbuf(stderr, NULL, _IONBF, 0);
-
-        /* create the pipe and redirect stdout and stderr */
-        pipe(pfd);
-        dup2(pfd[1], 1);
-        dup2(pfd[1], 2);
-
-        /* spawn the logging thread */
-        if(pthread_create(&thr, 0, thread_func, 0) == -1)
-            return -1;
-        pthread_detach(thr);
-        return 0;
-    }
-}
-
-#endif
-
-#else
-// If TAG is not defined, we need to specify a way of getting a logging class, and a way of logging messages
-typedef struct ModInfo ModInfo;
-class Logger {
+/// @class Logger Buffer
+/// @brief A buffer for logger data. Used for logging to file in a buffered fashion.
+/// Each LoggerBuffer exists to wrap around a single logger instance.
+/// Every time log is called on the instance, this buffer is updated (assuming options.toFile is true for the instance)
+/// Each buffer contains multiple messages that need to be written out, stored as an std::list
+class LoggerBuffer {
+    friend Logger;
+    private:
+    std::string path;
     public:
-        Logger(const ModInfo info);
-        Logger(std::string_view tag_);
+    std::list<std::string> messages;
+    const ModInfo modInfo;
+    bool closed = false;
+    static std::string get_logDir() {
+        // Copy it
+        static std::string d = string_format(LOG_PATH, Modloader::getApplicationId().c_str());
+        return d;
+    }
+    std::string get_path() {
+        std::string cpy = modInfo.version;
+        std::replace(cpy.begin(), cpy.end(), '.', '_');
+        auto val = get_logDir() + modInfo.id + "_" + cpy + ".log";
+        return val;
+    }
+    std::size_t length();
+    void addMessage(std::string_view msg);
+    public:
+    void flush();
+    LoggerBuffer(const ModInfo info) : modInfo(info) {
+        path = get_path();
+    }
+};
+
+/// @struct Logger Options
+/// @brief Provides various options for loggers, including silencing them and logging to file.
+struct LoggerOptions {
+    bool silent = false;
+    bool toFile = false;
+    constexpr LoggerOptions(bool silent_ = false, bool toFile_ = false) : silent(silent_), toFile(toFile_) {}
+};
+
+class Consumer;
+
+class Logger {
+    friend Consumer;
+    friend LoggerBuffer;
+    public:
+        Logger(const ModInfo info, LoggerOptions options_) : options(options_), modInfo(info), buff(emplace_safe(modInfo)) {
+            tag = "QuestHook[" + info.id + "|v" + info.version + "]";
+            init();
+        }
+        Logger(const ModInfo info) : Logger(info, LoggerOptions{false, false}) {}
         void log(Logging::Level lvl, std::string str) const;
         void log(Logging::Level lvl, std::string_view fmt, ...) const;
         void critical(std::string_view fmt, ...) const;
@@ -109,23 +95,47 @@ class Logger {
         void warning(std::string_view fmt, ...) const;
         void info(std::string_view fmt, ...) const;
         void debug(std::string_view fmt, ...) const;
-        // Returns the logger that is used within the utils library. This function should not be used outside of the main library
-        static const Logger& get();
-        /// @brief Call this to silence all beatsaber-hook specific logs. Should improve performance slightly.
-        /// Note that this call causes ALL calls to this bs-hook to be silent, including from other mods.
+        /// @brief Flushes the buffer for this logger instance.
+        void flush() const;
+        /// @brief Closes the buffer for this logger instance, flushing as necessary.
+        /// After this call, this logger will no longer log to a buffer, nor will it log to a file.
+        void close() const;
+        /// @brief Returns the logger that is used within the utils library. This function should not be used outside of the main library
+        static Logger& get();
+        /// @brief Close all open LoggerBuffer objects. Should only be called on a crash or exit of the game.
+        static void closeAll();
+        /// @brief Flush all open LoggerBuffer objects.
+        static void flushAll();
+        /// @brief Initialize this logger. Deletes existing file logs.
+        /// This happens on default when this instance is constructed.
+        /// This should also be called anytime the options field is modified.
+        void init() const;
+        /// @brief Call this to silence logs from this logger. Should improve performance slightly.
+        /// Note that this call causes ALL calls to this particular logger to be silent, including from other mods.
         /// Should only be used in particular cases.
-        static inline void disable() {
-            silent = true;
+        constexpr void disable() {
+            options.silent = true;
         }
-        /// @brief Call this to re-enable all beatsaber-hook specific logs. Decreases performance slightly, but provides debug information.
-        /// Note that this call causes ALL calls to this bs-hook version to be enabled again, including from other mods that want silence.
+        /// @brief Call this to re-enable logs for this logger. Decreases performance slightly, but provides debug information.
+        /// Note that this call causes ALL calls to this particular logger to be enabled again, including from other mods that want silence.
         /// Should only be used in particular cases.
-        static inline void enable() {
-            silent = false;
+        constexpr void enable() {
+            options.silent = false;
         }
+        LoggerOptions options;
     private:
-        static bool silent;
         std::string tag;
-};
+        const ModInfo modInfo;
+        LoggerBuffer& buff;
+        static bool consumerStarted;
+        static std::vector<LoggerBuffer> buffers;
+        static std::mutex bufferMutex;
 
-#endif /* TAG */
+        static LoggerBuffer& emplace_safe(const ModInfo& info) {
+            // Obtain lock
+            std::unique_lock<std::mutex> lck(bufferMutex);
+            // Emplace, lock is released
+            return Logger::buffers.emplace_back(info);
+        }
+        static void startConsumer();
+};

@@ -23,7 +23,7 @@ void New_Accuracy_Start(Il2CppObject* self) {
  	auto ScoreTextParentTransform = *GetPropertyValue(ScoreTextTransform, "parent");
 
  	NewAccuracyText.parentTransform = ScoreTextParentTransform;
- 	NewAccuracyText.text = "Average Cut\n       " + Round(FinalLeftHand_Average, 0) + "  " + Round(FinalRightHand_Average, 0);	
+ 	NewAccuracyText.text = "Average Cut\n       " + Round(FinalLeftHand_Average) + "  " + Round(FinalRightHand_Average);	
  	NewAccuracyText.fontSize = 12.0F;        
  	NewAccuracyText.sizeDelta = {-615, 220};
  	NewAccuracyText.create();
@@ -37,7 +37,7 @@ void Update_Text()
 {
 	getLogger().debug(std::to_string(LeftHand_Average));
 	getLogger().debug(std::to_string(RightHand_Average));
-	std::string text = "Average Cut\n       " + Round(FinalLeftHand_Average, 0) + "  " + Round(FinalRightHand_Average, 0);
+	std::string text = "Average Cut\n       " + std::to_string(FinalLeftHand_Average) + "  " + std::to_string(FinalRightHand_Average);
 	NewAccuracyText.set(text);
 }
 

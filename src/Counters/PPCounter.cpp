@@ -1,4 +1,5 @@
 #include "../../include/Main.hpp"
+#include "../Utils/PPUtils.hpp"
 #include <dlfcn.h>
 #include <iomanip>
 #include <sstream>
@@ -37,8 +38,8 @@ void PP_Start(Il2CppObject *self) {
 	}
 	else
 	{
-		//GameplayModifiers* updatedModifiers = AllowedPositiveModifiers(songID) ? mods : RemovePositiveModifiers(mods);
-		//_multiplier = CalculateMultiplier(modifiersModel, updatedModifiers);
+		GameplayModifiers* updatedModifiers = AllowedPositiveModifiers(songID) ? mods : RemovePositiveModifiers(mods);
+		_multiplier = CalculateMultiplier(modifiersModel, updatedModifiers);
 	}
 	
 	PPTextObject.sizeDelta = {-325, -120};
@@ -47,12 +48,13 @@ void PP_Start(Il2CppObject *self) {
 }
 
 void PP_Update(float Percentage) {
+	if(!Ranked) return;
 	float acc = Percentage * _multiplier;
 
 	float pp = CalculatePP(songID, acc);
 
 	Stats_PP = pp;
-	if (PPTextObject.gameObj == nullptr || !Ranked || modifiersModel == nullptr) {
+	if (PPTextObject.gameObj == nullptr || modifiersModel == nullptr) {
 		return;
 	}
 

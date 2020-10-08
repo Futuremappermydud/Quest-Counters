@@ -36,7 +36,17 @@ bool deletefile(std::string_view filename);
 bool fileexists(std::string_view filename);
 // Returns if a directory exists and can be written to / read from
 bool direxists(std::string_view dirname);
-// Returns a loaded UnityEngine.Object from an asset (NOT YET IMPLEMENTED!)
-void* loadfromasset(const char* assetFilePath, const char* assetName);
+// Yoinked from: https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
+// TODO: This should be removed once std::format exists
+template<typename... TArgs>
+std::string string_format(const std::string_view format, TArgs ... args)
+{
+    size_t size = snprintf(nullptr, 0, format.data(), args ...) + 1; // Extra space for '\0'
+    if (size <= 0)
+        return "";
+    std::unique_ptr<char[]> buf(new char[size]); 
+    snprintf(buf.get(), size, format.data(), args...);
+    return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+}
 
 #endif /* UTILS_FUNCTIONS_H */

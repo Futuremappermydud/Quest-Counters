@@ -20,6 +20,20 @@ constexpr bool has_get = std::experimental::is_detected_v<get_t, T>;
 #endif
 
 #include "utils.h"
+#include <string_view>
+#include <vector>
+
+#ifndef classof
+// Returns the Il2CppClass* of the provided type T.
+// Should be a pointer type if it is a reference type, otherwise it should be a value type.
+#define classof(T) ::il2cpp_utils::il2cpp_type_check::il2cpp_no_arg_class<T>::get()
+#endif
+
+#ifndef typeof
+// Returns the Il2CppReflectionType* of the provided type T.
+// Should be a pointer type if it is a reference type, otherwise it should be a value type.
+#define typeof(T) ::il2cpp_utils::GetSystemType(classof(T))
+#endif
 
 namespace il2cpp_utils {
     // Returns the first matching class from the given namespace and typeName by searching through all assemblies that are loaded.

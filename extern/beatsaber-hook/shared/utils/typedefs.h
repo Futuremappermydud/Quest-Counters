@@ -303,6 +303,11 @@ struct Array : public Il2CppArray
         return arr;
     }
 
+    static Array<T>* NewLength(il2cpp_array_size_t size) {
+        return reinterpret_cast<Array<T>*>(il2cpp_functions::array_new(
+            il2cpp_utils::il2cpp_type_check::il2cpp_no_arg_class<T>::get(), size));
+    }
+
     template<typename... TArgs>
     static Array<T>* New(TArgs&&... args) {
         return New({args...});
